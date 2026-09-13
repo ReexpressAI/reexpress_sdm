@@ -1,0 +1,50 @@
+# macOS Finder metadata
+.DS_Store
+._*
+
+# Local JetBrains/PyCharm project settings
+.idea/
+
+# Python bytecode and generated package metadata
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Built distributions and packaging output
+/build/
+/dist/
+/release-dist/
+/wheels/
+*.whl
+*.egg
+
+# Local Python virtual environments
+/.venv/
+/.venv-*/
+/venv/
+/env/
+
+# Python tool caches and temporary test environments
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# Generated coverage reports
+.coverage
+.coverage.*
+/htmlcov/
+/coverage.xml
+
+# Local credentials; retain example environment configuration
+/.env
+/.env.*
+!/.env.example
+!/.env.sample
+!/.env.template
+/.pypirc
