@@ -1,3 +1,5 @@
+# Git ignore rules for the reexpress_sdm repository.
+
 # macOS Finder metadata
 .DS_Store
 ._*
@@ -48,3 +50,9 @@ __pycache__/
 !/.env.sample
 !/.env.template
 /.pypirc
+
+# Intentionally keep source, scripts, tests, documentation, LICENSE,
+# pyproject.toml, MANIFEST.in, dependency lockfiles, and config examples.
+# JSON/JSONL, binary arrays, and .sdmkitmodel/.sdmdataset fixtures stay included.
+# Add narrowly scoped rules for personal datasets or model outputs as needed;
+# do not ignore these formats globally.

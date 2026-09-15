@@ -1,0 +1,4 @@
+{"id": "centroid-and-lower", "label": 0, "document": "Reliable A \u2014 line one\nline two", "embedding": [2], "attributes": [0], "metadata": {"source": "Python"}}
+{"id": "centroid-only", "label": 1, "document": "Centroid B", "embedding": [0], "attributes": [1]}
+{"id": "rejected", "label": -1, "document": "Ambiguous", "embedding": [0], "attributes": [0]}
+{"id": "ood", "label": 0, "embedding": [4], "attributes": [4]}

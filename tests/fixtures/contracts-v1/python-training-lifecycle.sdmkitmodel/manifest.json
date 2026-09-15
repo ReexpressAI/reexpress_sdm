@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "modelID": "python-training-lifecycle-continued-v1",
+  "createdAt": "2026-09-05T12:01:00Z",
+  "producer": {
+    "name": "reexpress-sdm",
+    "version": "0.2.0"
+  },
+  "configuration": {
+    "numberOfClasses": 2,
+    "classNames": [
+      "Negative",
+      "Positive"
+    ],
+    "embeddingDimension": 3,
+    "exemplarDimension": 4,
+    "maxNeighbors": 5,
+    "qOffset": 2.0,
+    "oodLimit": 0,
+    "alphaResolution": 0.1,
+    "distanceMetric": "squaredL2",
+    "neighborTieBreak": "supportIndexAscending"
+  },
+  "normalization": {
+    "mean": -0.025000005960464478,
+    "standardDeviation": 1.001412034034729
+  },
+  "representation": {
+    "provider": "precomputed",
+    "model": "tiny-contract-v1",
+    "revision": null,
+    "inputTemplate": null,
+    "fingerprint": "python-torch-lifecycle:v1"
+  },
+  "weights": {
+    "file": "weights.f32",
+    "elementCount": 26
+  },
+  "support": {
+    "vectorsFile": "support.f32",
+    "recordsFile": "support.jsonl",
+    "count": 10
+  },
+  "distanceCDFs": [
+    [
+      0.02256166934967041,
+      0.027129054069519043,
+      0.13533389568328857,
+      0.1809678077697754
+    ],
+    [
+      0.049457550048828125,
+      0.0645904541015625
+    ]
+  ],
+  "rescaledSimilarityCDFs": [
+    [
+      0.0,
+      2.6457512378692627,
+      2.6457512378692627,
+      5.0,
+      5.0
+    ],
+    [
+      1.0,
+      2.0
+    ]
+  ],
+  "regions": [],
+  "metadata": {
+    "trainingBackend": "pytorch-optional",
+    "trainingDevice": "cpu",
+    "artifactFinalizationBackend": "numpy-float32-canonical",
+    "bestEpoch": 4,
+    "bestBalancedCalibrationSDMLoss": 0.4140647351741791,
+    "canonicalFinalBalancedCalibrationSDMLoss": 0.4140647351741791,
+    "acceleratedSelectionBalancedCalibrationSDMLoss": 0.4140647351741791,
+    "crossEntropyEpochs": 3,
+    "stoppedEarly": false,
+    "trainingRun": {
+      "schemaVersion": 1,
+      "configuration": {
+        "epochs": 4,
+        "batchSize": 5,
+        "learningRate": 0.01,
+        "exemplarDimension": 4,
+        "maximumNeighbors": 5,
+        "alphaResolution": 0.1,
+        "seed": "31",
+        "crossEntropyEpochs": 3,
+        "iterations": 1,
+        "shuffleTrainingAndCalibration": false,
+        "initialization": "activeModel"
+      },
+      "backend": "torch:cpu",
+      "history": [
+        {
+          "iteration": 1,
+          "epoch": 1,
+          "marginalTrainingLoss": 0.4743456542491913,
+          "balancedTrainingSDMLoss": null,
+          "balancedCalibrationSDMLoss": null,
+          "balancedTrainingCELoss": 0.48396363854408264,
+          "balancedCalibrationCELoss": 0.5001344680786133,
+          "balancedTrainingAccuracy": 0.7619047619047619,
+          "balancedCalibrationAccuracy": 0.65,
+          "balancedMeanTrainingQ": null,
+          "balancedMeanCalibrationQ": null,
+          "isBest": true
+        },
+        {
+          "iteration": 1,
+          "epoch": 2,
+          "marginalTrainingLoss": 0.43535079061985016,
+          "balancedTrainingSDMLoss": null,
+          "balancedCalibrationSDMLoss": null,
+          "balancedTrainingCELoss": 0.4494432508945465,
+          "balancedCalibrationCELoss": 0.46988430619239807,
+          "balancedTrainingAccuracy": 0.7619047619047619,
+          "balancedCalibrationAccuracy": 0.9,
+          "balancedMeanTrainingQ": null,
+          "balancedMeanCalibrationQ": null,
+          "isBest": true
+        },
+        {
+          "iteration": 1,
+          "epoch": 3,
+          "marginalTrainingLoss": 0.4035223126411438,
+          "balancedTrainingSDMLoss": 0.46222853660583496,
+          "balancedCalibrationSDMLoss": 0.5143200159072876,
+          "balancedTrainingCELoss": 0.4171571135520935,
+          "balancedCalibrationCELoss": 0.4413177967071533,
+          "balancedTrainingAccuracy": 0.7619047619047619,
+          "balancedCalibrationAccuracy": 0.9,
+          "balancedMeanTrainingQ": 2.119047619047619,
+          "balancedMeanCalibrationQ": 2.5,
+          "isBest": true
+        },
+        {
+          "iteration": 1,
+          "epoch": 4,
+          "marginalTrainingLoss": 0.4025438725948334,
+          "balancedTrainingSDMLoss": 0.43117034435272217,
+          "balancedCalibrationSDMLoss": 0.4140647351741791,
+          "balancedTrainingCELoss": null,
+          "balancedCalibrationCELoss": null,
+          "balancedTrainingAccuracy": 0.9285714285714286,
+          "balancedCalibrationAccuracy": 0.9,
+          "balancedMeanTrainingQ": 2.261904761904762,
+          "balancedMeanCalibrationQ": 2.75,
+          "isBest": true
+        }
+      ],
+      "bestIteration": 1,
+      "iterationCount": 1,
+      "bestEpoch": 4,
+      "bestBalancedCalibrationLoss": 0.4140647351741791,
+      "sourceModelID": "python-training-lifecycle-source-v1",
+      "stoppedEarly": false
+    },
+    "continuedFromModelID": "python-training-lifecycle-source-v1",
+    "optimizerRestarted": true,
+    "normalizationPreserved": true
+  },
+  "checksums": {
+    "weights.f32": "59d2677650c1cfc8bd25bd92c219929cb25e4a8fbbb813042d572c81d523fb85",
+    "support.f32": "8b562f11e5fbf09b361efbcd7b099ef229ca0dcbaabf0715904494f7a15db355",
+    "support.jsonl": "810dc4568c238e33b577e879009047ae4ce41a359346d94ecb3e874857e87a2e",
+    "calibration.jsonl": "fd559d3062b6ec21d61abc285b73a3c8e12ec03cbfc925b1fe219f36eaf88c29"
+  }
+}

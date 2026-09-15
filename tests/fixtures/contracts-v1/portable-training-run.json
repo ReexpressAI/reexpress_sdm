@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "configuration": {
+    "epochs": 3,
+    "batchSize": 8,
+    "learningRate": 1e-05,
+    "exemplarDimension": 3,
+    "maximumNeighbors": 8,
+    "alphaResolution": 0.1,
+    "seed": "18446744073709551615",
+    "crossEntropyEpochs": 2,
+    "iterations": 2,
+    "shuffleTrainingAndCalibration": false,
+    "initialization": "activeModel"
+  },
+  "backend": "torch:cuda",
+  "history": [
+    {
+      "iteration": 1,
+      "epoch": 1,
+      "marginalTrainingLoss": 0.8,
+      "balancedTrainingSDMLoss": null,
+      "balancedCalibrationSDMLoss": null,
+      "balancedTrainingCELoss": 0.75,
+      "balancedCalibrationCELoss": 0.7,
+      "balancedTrainingAccuracy": 0.5,
+      "balancedCalibrationAccuracy": 0.625,
+      "balancedMeanTrainingQ": null,
+      "balancedMeanCalibrationQ": null,
+      "isBest": true
+    },
+    {
+      "iteration": 1,
+      "epoch": 2,
+      "marginalTrainingLoss": 0.8,
+      "balancedTrainingSDMLoss": 0.45,
+      "balancedCalibrationSDMLoss": 0.4,
+      "balancedTrainingCELoss": 0.65,
+      "balancedCalibrationCELoss": 0.6,
+      "balancedTrainingAccuracy": 0.5,
+      "balancedCalibrationAccuracy": 0.625,
+      "balancedMeanTrainingQ": 2.1666666666666665,
+      "balancedMeanCalibrationQ": 1.1666666666666667,
+      "isBest": true
+    },
+    {
+      "iteration": 1,
+      "epoch": 3,
+      "marginalTrainingLoss": 0.8,
+      "balancedTrainingSDMLoss": 0.5,
+      "balancedCalibrationSDMLoss": 0.45,
+      "balancedTrainingCELoss": null,
+      "balancedCalibrationCELoss": null,
+      "balancedTrainingAccuracy": 0.5,
+      "balancedCalibrationAccuracy": 0.625,
+      "balancedMeanTrainingQ": 2.1666666666666665,
+      "balancedMeanCalibrationQ": 1.1666666666666667,
+      "isBest": true
+    },
+    {
+      "iteration": 2,
+      "epoch": 1,
+      "marginalTrainingLoss": 0.8,
+      "balancedTrainingSDMLoss": 0.65,
+      "balancedCalibrationSDMLoss": 0.6,
+      "balancedTrainingCELoss": 0.75,
+      "balancedCalibrationCELoss": 0.7,
+      "balancedTrainingAccuracy": 0.5,
+      "balancedCalibrationAccuracy": 0.625,
+      "balancedMeanTrainingQ": 2.1666666666666665,
+      "balancedMeanCalibrationQ": 1.1666666666666667,
+      "isBest": true
+    }
+  ],
+  "bestIteration": 1,
+  "iterationCount": 2,
+  "bestEpoch": 2,
+  "bestBalancedCalibrationLoss": 0.4,
+  "sourceModelID": "seed-model-001",
+  "stoppedEarly": true
+}

@@ -1,0 +1,228 @@
+{
+  "modelID": "python-training-lifecycle-continued-v1",
+  "sourceModelID": "python-training-lifecycle-source-v1",
+  "sourceNormalization": {
+    "mean": -0.025000005960464478,
+    "standardDeviation": 1.001412034034729
+  },
+  "sourceRepresentation": {
+    "provider": "precomputed",
+    "model": "tiny-contract-v1",
+    "revision": null,
+    "inputTemplate": null,
+    "fingerprint": "python-torch-lifecycle:v1"
+  },
+  "sourceExemplarDimension": 4,
+  "sourceWeightsSHA256": "d4aa9ea7560e1fa09fef9493a759046c982749305e04298f7e609349aa3156d0",
+  "weightsSHA256": "59d2677650c1cfc8bd25bd92c219929cb25e4a8fbbb813042d572c81d523fb85",
+  "trainingRun": {
+    "schemaVersion": 1,
+    "configuration": {
+      "epochs": 4,
+      "batchSize": 5,
+      "learningRate": 0.01,
+      "exemplarDimension": 4,
+      "maximumNeighbors": 5,
+      "alphaResolution": 0.1,
+      "seed": "31",
+      "crossEntropyEpochs": 3,
+      "iterations": 1,
+      "shuffleTrainingAndCalibration": false,
+      "initialization": "activeModel"
+    },
+    "backend": "torch:cpu",
+    "history": [
+      {
+        "iteration": 1,
+        "epoch": 1,
+        "marginalTrainingLoss": 0.4743456542491913,
+        "balancedTrainingSDMLoss": null,
+        "balancedCalibrationSDMLoss": null,
+        "balancedTrainingCELoss": 0.48396363854408264,
+        "balancedCalibrationCELoss": 0.5001344680786133,
+        "balancedTrainingAccuracy": 0.7619047619047619,
+        "balancedCalibrationAccuracy": 0.65,
+        "balancedMeanTrainingQ": null,
+        "balancedMeanCalibrationQ": null,
+        "isBest": true
+      },
+      {
+        "iteration": 1,
+        "epoch": 2,
+        "marginalTrainingLoss": 0.43535079061985016,
+        "balancedTrainingSDMLoss": null,
+        "balancedCalibrationSDMLoss": null,
+        "balancedTrainingCELoss": 0.4494432508945465,
+        "balancedCalibrationCELoss": 0.46988430619239807,
+        "balancedTrainingAccuracy": 0.7619047619047619,
+        "balancedCalibrationAccuracy": 0.9,
+        "balancedMeanTrainingQ": null,
+        "balancedMeanCalibrationQ": null,
+        "isBest": true
+      },
+      {
+        "iteration": 1,
+        "epoch": 3,
+        "marginalTrainingLoss": 0.4035223126411438,
+        "balancedTrainingSDMLoss": 0.46222853660583496,
+        "balancedCalibrationSDMLoss": 0.5143200159072876,
+        "balancedTrainingCELoss": 0.4171571135520935,
+        "balancedCalibrationCELoss": 0.4413177967071533,
+        "balancedTrainingAccuracy": 0.7619047619047619,
+        "balancedCalibrationAccuracy": 0.9,
+        "balancedMeanTrainingQ": 2.119047619047619,
+        "balancedMeanCalibrationQ": 2.5,
+        "isBest": true
+      },
+      {
+        "iteration": 1,
+        "epoch": 4,
+        "marginalTrainingLoss": 0.4025438725948334,
+        "balancedTrainingSDMLoss": 0.43117034435272217,
+        "balancedCalibrationSDMLoss": 0.4140647351741791,
+        "balancedTrainingCELoss": null,
+        "balancedCalibrationCELoss": null,
+        "balancedTrainingAccuracy": 0.9285714285714286,
+        "balancedCalibrationAccuracy": 0.9,
+        "balancedMeanTrainingQ": 2.261904761904762,
+        "balancedMeanCalibrationQ": 2.75,
+        "isBest": true
+      }
+    ],
+    "bestIteration": 1,
+    "iterationCount": 1,
+    "bestEpoch": 4,
+    "bestBalancedCalibrationLoss": 0.4140647351741791,
+    "sourceModelID": "python-training-lifecycle-source-v1",
+    "stoppedEarly": false
+  },
+  "scores": [
+    {
+      "modelID": "python-training-lifecycle-continued-v1",
+      "id": "evaluation-0",
+      "prediction": 0,
+      "q": 5,
+      "d0": 0.04789966344833374,
+      "d": 0.5,
+      "qPrime": 5.0,
+      "nearestSupportIndex": 1,
+      "nearestSupportID": "source-train-1",
+      "centroidRegionAlpha": 0.0,
+      "lowerRegionAlpha": 0.0,
+      "isInMostConservativeRegion": false,
+      "isInMostConservativeRegionLower": false,
+      "zPrime": [
+        1.4523204565048218,
+        -0.33868706226348877
+      ],
+      "sdm": [
+        0.85101318359375,
+        0.14898681640625
+      ],
+      "cumulativeEffectiveSampleSizes": [
+        5,
+        2
+      ],
+      "effectiveSampleSizeErrors": [
+        1.0,
+        1.0
+      ],
+      "dLower": 0.0,
+      "dUpper": 1.0,
+      "sdmLower": [
+        0.5,
+        0.5
+      ],
+      "sdmUpper": [
+        0.9702620506286621,
+        0.02973802573978901
+      ],
+      "qPrimeLower": 2.6457512378692627
+    },
+    {
+      "modelID": "python-training-lifecycle-continued-v1",
+      "id": "evaluation-1",
+      "prediction": 1,
+      "q": 1,
+      "d0": 0.2304210662841797,
+      "d": 0.0,
+      "qPrime": 1.0,
+      "nearestSupportIndex": 6,
+      "nearestSupportID": "source-train-6",
+      "centroidRegionAlpha": 0.0,
+      "lowerRegionAlpha": 0.0,
+      "isInMostConservativeRegion": false,
+      "isInMostConservativeRegionLower": false,
+      "zPrime": [
+        0.09756386280059814,
+        0.4313289523124695
+      ],
+      "sdm": [
+        0.5,
+        0.5
+      ],
+      "cumulativeEffectiveSampleSizes": [
+        1,
+        1
+      ],
+      "effectiveSampleSizeErrors": [
+        1.0,
+        1.0
+      ],
+      "dLower": 0.0,
+      "dUpper": 1.0,
+      "sdmLower": [
+        0.5,
+        0.5
+      ],
+      "sdmUpper": [
+        0.4093438386917114,
+        0.5906561017036438
+      ],
+      "qPrimeLower": 1.0
+    },
+    {
+      "modelID": "python-training-lifecycle-continued-v1",
+      "id": "evaluation-2",
+      "prediction": 0,
+      "q": 0,
+      "d0": 2.4728851318359375,
+      "d": 0.0,
+      "qPrime": 0.0,
+      "nearestSupportIndex": 6,
+      "nearestSupportID": "source-train-6",
+      "centroidRegionAlpha": 0.0,
+      "lowerRegionAlpha": 0.0,
+      "isInMostConservativeRegion": false,
+      "isInMostConservativeRegionLower": false,
+      "zPrime": [
+        0.6714121699333191,
+        -0.22727665305137634
+      ],
+      "sdm": [
+        0.5,
+        0.5
+      ],
+      "cumulativeEffectiveSampleSizes": [
+        1,
+        0
+      ],
+      "effectiveSampleSizeErrors": [
+        1.0,
+        1.0
+      ],
+      "dLower": 0.0,
+      "dUpper": 1.0,
+      "sdmLower": [
+        0.5,
+        0.5
+      ],
+      "sdmUpper": [
+        0.6508831977844238,
+        0.34911680221557617
+      ],
+      "qPrimeLower": 0.0
+    }
+  ],
+  "floatTolerance": 5e-05
+}
