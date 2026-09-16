@@ -14,7 +14,9 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=2.0", "torch>=2.5"]
 
 [project.urls]
-Homepage = "https://re.express"
+Homepage = "https://github.com/ReexpressAI/reexpress_sdm"
+Repository = "https://github.com/ReexpressAI/reexpress_sdm"
+Issues = "https://github.com/ReexpressAI/reexpress_sdm/issues"
 
 [project.scripts]
 sdm = "reexpress_sdm.cli:main"
