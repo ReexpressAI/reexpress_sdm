@@ -15,9 +15,8 @@ contains the Python package; building and using it does not require the macOS
 app, Swift, or files from another repository. NumPy provides host arrays,
 calibration math, and reporting; PyTorch is the execution backend.
 
-Licensed under [Apache-2.0](LICENSE). See [re.express](https://re.express) for
-project information and the [original research implementation](https://github.com/ReexpressAI/reexpress_mcp_server)
-for the research baseline.
+Licensed under [Apache-2.0](LICENSE). See the [original research implementation](https://github.com/ReexpressAI/reexpress_mcp_server)
+for the research reference code, as well as the peer-reviewed papers introducing the methods. See [re.express](https://re.express) for additional related software.
 
 ## Install
 
