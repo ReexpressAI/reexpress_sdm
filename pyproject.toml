@@ -7,7 +7,7 @@ name = "reexpress_sdm"
 version = "0.4.5"
 description = "Portable Similarity-Distance-Magnitude estimation with PyTorch training and inference"
 readme = "README.md"
-authors = [{name = "Reexpress, AI, Inc.", email = "ai.science@re.express"}]
+authors = [{name = "Reexpress AI, Inc.", email = "ai.science@re.express"}]
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"

@@ -18,6 +18,8 @@ calibration math, and reporting; PyTorch is the execution backend.
 Licensed under [Apache-2.0](LICENSE). See the [original research implementation](https://github.com/ReexpressAI/reexpress_mcp_server)
 for the research reference code, as well as the peer-reviewed papers introducing the methods. See [re.express](https://re.express) for additional related software.
 
+### See the [Getting Started Tutorial](tutorials/getting_started_tutorial.sh) to step through each of the main commands with provided example data.
+
 ## Install
 
 Use Python **3.10 or newer**. From the root of a checkout named `reexpress_sdm`:
