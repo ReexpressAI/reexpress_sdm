@@ -30,7 +30,7 @@ python -m pip install -e .
 sdm --help
 ```
 
-On Windows, activate the environment with `.venv\Scripts\activate` instead.
+(On Windows, activate the environment with `.venv\Scripts\activate` instead. Note that Windows support is currently experimental.)
 The package installs NumPy (>=2.0) and PyTorch (>=2.5); it needs no optional
 execution-backend extra. For CUDA, use a PyTorch installation compatible with
 your GPU and driver. Device availability depends on that PyTorch installation.
