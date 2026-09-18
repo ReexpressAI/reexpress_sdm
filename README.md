@@ -18,7 +18,20 @@ calibration math, and reporting; PyTorch is the execution backend.
 Licensed under [Apache-2.0](LICENSE). See the [original research implementation](https://github.com/ReexpressAI/reexpress_mcp_server)
 for the research reference code, as well as the peer-reviewed papers introducing the methods. See [re.express](https://re.express) for additional related software.
 
-### See the [Getting Started Tutorial](tutorials/getting_started_tutorial.sh) to step through each of the main commands with provided example data.
+### See the [Getting Started Tutorial (HTML)](tutorials/getting_started_tutorial.html) to step through each of the main commands with provided example data.
+
+## Takeaway: SDM Estimators unlock Actionable Interpretability for neural networks
+
+- `reexpress_sdm` provides point predictions and calibrated estimates of the predictive uncertainty for small |Y| classification tasks (typically 2-5 classes). The input is cached vectors (typically derived from the hidden-states of a neural language model).
+- Before a test prediction can be made, the model must be trained and calibrated. The code trains and calibrates a small neural network (specifically, a Similarity-Distance-Magnitude activation) over the input vectors for the given classification task with user-provided labeled data. Once trained and calibrated, that model can then be used for predicting over new, unseen test instances. Training and testing involve L^2 nearest-neighbor matching.
+- In the per-instance output at test-time, the field "prediction" provides the point prediction and "centroidRegionAlpha" provides a conservative estimate into which class- and prediction-conditional region of the held-out calibration set the prediction falls. A "centroidRegionAlpha" value of 0.95, for example, is an estimate that the datapoint falls into a region of the distribution for which the class- and prediction-conditional accuracy is *at least* 0.95. A value of 0.0 indicates no region was assigned; such points should be treated as out-of-distribution to the estimator.
+- The "centroidRegionAlpha" estimate corresponds to the nested HR regions defined in "Similarity-Distance-Magnitude Activations" (published in ACL Findings 2026) and "Research Note: Nested Similarity-Distance-Magnitude Estimators".
+- This is a more stringent calibration criterion than a prediction-conditional estimate. It is an easy-to-understand quantity useful for typical applications involving conditional-branching decisions with language models.
+- Typical use-cases:
+  - Calibrating "LLM-as-a-Judge", including an ensemble of such models
+  - Estimating uncertainty over retrieval and tool-calls
+  - Building continual-learning and memory-based systems
+  - More generally, reexpress_sdm unlocks Actionable Interpretability for neural network systems, since the metric-learning, geometry-aware uncertainty estimates have a direct instance-wise mapping to the training/calibration data, enabling uncertainty-aware *interpretability-by-exemplar*.
 
 ## Install
 

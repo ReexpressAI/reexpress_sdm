@@ -3,12 +3,28 @@
 #########################################################################################################
 
 # The following sections are meant to be pasted into the terminal, rather than executed as a single script.
-# There is alternatively an HTML-formatted version of this same content saved in this directory.
+# We recommend reading the HTML formatted tutorial getting_started_tutorial.html, but this file contains the core content for reading in a text editor.
 
 # This provides a tutorial for the command line interface (CLI), which exposes the core behavior of the
 # package. For additional flexibility, use the Python API. Even if you plan to use the latter, this
 # tutorial can be informative to step through to get an overview of the key behavior.
 
+#########################################################################################################
+##################### Takeaway: SDM Estimators unlock Actionable Interpretability for neural networks
+#########################################################################################################
+
+#- `reexpress_sdm` provides point predictions and calibrated estimates of the predictive uncertainty for small |Y| classification tasks (typically 2-5 classes). The input is cached vectors (typically derived from the hidden-states of a neural language model).
+#- Before a test prediction can be made, the model must be trained and calibrated. The code trains and calibrates a small neural network (specifically, a Similarity-Distance-Magnitude activation) over the input vectors for the given classification task with user-provided labeled data. Once trained and calibrated, that model can then be used for predicting over new, unseen test instances. Training and testing involve L^2 nearest-neighbor matching.
+#- In the per-instance output at test-time, the field "prediction" provides the point prediction and "centroidRegionAlpha" provides a conservative estimate into which class- and prediction-conditional region of the held-out calibration set the prediction falls. A "centroidRegionAlpha" value of 0.95, for example, is an estimate that the datapoint falls into a region of the distribution for which the class- and prediction-conditional accuracy is *at least* 0.95. A value of 0.0 indicates no region was assigned; such points should be treated as out-of-distribution to the estimator.
+#- The "centroidRegionAlpha" estimate corresponds to the nested HR regions defined in "Similarity-Distance-Magnitude Activations" (published in ACL Findings 2026) and "Research Note: Nested Similarity-Distance-Magnitude Estimators".
+#- This is a more stringent calibration criterion than a prediction-conditional estimate. It is an easy-to-understand quantity useful for typical applications involving conditional-branching decisions with language models.
+#- Typical use-cases:
+#  - Calibrating "LLM-as-a-Judge", including an ensemble of such models
+#  - Estimating uncertainty over retrieval and tool-calls
+#  - Building continual-learning and memory-based systems
+#  - More generally, reexpress_sdm unlocks Actionable Interpretability for neural network systems, since the metric-learning, geometry-aware uncertainty estimates have a direct instance-wise mapping to the training/calibration data, enabling uncertainty-aware *interpretability-by-exemplar*.
+    
+    
 #########################################################################################################
 ##################### Overview
 #########################################################################################################
@@ -82,7 +98,7 @@ unzip factcheck_gemma_4_31b_it_4bit.zip
 
 # `sdm train` learns the parameters of the SDM activation (the final-layer adaptor) AND runs the calibration algorithm to partition the calibration set. Once `sdm train` completes, the model is ready to be used to predict over new, unseen data.
 
-# Here, training for 2 iterations of 500 epochs each. For the purposes of the tutorial, feel free to reduce the number of iterations or epochs for faster training. As a back-of-the-envelope guide, each epoch on an M2 Ultra 76 core Mac Studio takes about 0.5 seconds, and around 8 minutes for the full run. For a production setting, we would train with additional iterations and epochs (and ideally, a larger dataset). Interestingly, an advantageous property of the SDM estimator is that such calibration is relatively robust to under-trained, or otherwise poorly optimized, models. (The estimator will tend to be conservative in those cases. Training the adaptor using the standard cross-entropy loss, which is equivalent to the SDM loss with the instance-wise regularization terms set at a constant q=e-2 and d=1, will also tend to not "break" calibration, but the estimator will tend to be more conservative than when training with the SDM loss.) Such variations are easy to examine here and with the macOS app Reexpress two. Your exact results below may differ from ours depending on the options you choose.
+# Here, we train for 2 iterations of 500 epochs each. For the purposes of the tutorial, feel free to reduce the number of iterations or epochs for faster training. As a back-of-the-envelope guide, each epoch on an M2 Ultra 76 core Mac Studio takes about 0.5 seconds, and around 8 minutes for the full run. For a production setting, we would train with additional iterations and epochs (and ideally, a larger dataset). Interestingly, an advantageous property of the SDM estimator is that such calibration is relatively robust to under-trained, or otherwise poorly optimized, models. (The estimator will tend to be conservative in those cases. Training the adaptor using the standard cross-entropy loss, which is equivalent to the SDM loss with the instance-wise regularization terms set at a constant q=e-2 and d=1, will also tend to not "break" calibration, but the estimator will tend to be more conservative than when training with the SDM loss.) Such variations are easy to examine here and with the macOS app Reexpress two. Your exact results below may differ from ours depending on the options you choose.
 
 # as with other commands, use `sdm train --help` to see the available arguments (and defaults)
 
