@@ -97,7 +97,7 @@ are present. Set `--composition embedding` or `--composition attributes` to use
 only one field; use the same convention for training and subsequent scoring.
 
 `sdm score` saves each document's prediction and diagnostics. `sdm evaluate`
-writes aggregate statistics, including cumulative coverage at every calibrated
+writes aggregate statistics, including cumulative admission at every calibrated
 alpha in the model; it does not save individual scored documents. Both use the
 same scoring algorithm. See [CLI reference](#cli-reference) for details.
 
@@ -251,7 +251,7 @@ exact match with the artifact's representation fingerprint.
 row. Labels are optional, and full output retains the source fields for import
 into Reexpress two. `sdm evaluate` runs the same scoring algorithm on labeled data
 and writes an aggregate JSON report: accuracy, class-conditional accuracy,
-coverage at calibrated alpha levels, and score-distribution summaries. It does
+cumulative admission at calibrated alpha levels, and score-distribution summaries. It does
 not write individual scored documents or fit a new model.
 
 The report's `distribution` section contains per-signal counts, minima, maxima,
@@ -266,12 +266,17 @@ Set `SelectionPolicy(minimum_alpha=0.95)` to require a minimum accepted alpha.
 `sdm score` and `sdm evaluate` retain results for both estimators. Evaluation
 reports cumulative results at every calibrated alpha saved in the model.
 
+Admission is the proportion of evaluated documents whose assigned region meets or exceeds the selected α threshold.
+Each row in the `centroid.perAlphaCumulative` and `lower.perAlphaCumulative`
+evaluation results contains `admissionCount` for the number of admitted documents
+and `admission` for their proportion of evaluated documents.
+
 The portable dataset-row contract requires `label` (`-1` for unlabeled and
 `-99` for support-only OOD). As a scoring convenience, `sdm score` also accepts
 rows with no label and treats them as unlabeled. Both `sdm train` and
 `sdm evaluate` require a known class label in `0 ..< numberOfClasses` for every
 row. The Python evaluation API can also summarize mixed labeled/unlabeled/OOD
-scores, excluding sentinels from accuracy and coverage and reporting their
+scores, excluding sentinels from accuracy and admission and reporting their
 counts.
 
 For new training, omitted representation metadata uses fingerprint

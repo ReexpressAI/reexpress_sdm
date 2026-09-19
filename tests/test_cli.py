@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from contextlib import redirect_stderr, redirect_stdout
+from dataclasses import replace
 import io
 import json
 from pathlib import Path
@@ -11,6 +12,7 @@ from unittest.mock import patch
 
 from reexpress_sdm import TrainingConfig, TorchTrainer, create_dense_index, create_training_backend, write_artifact
 from reexpress_sdm.cli import build_parser, main
+from reexpress_sdm.model import SDMModel
 
 from helpers import make_artifact
 
@@ -79,6 +81,48 @@ class CLITests(unittest.TestCase):
         with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as error:
             parser.parse_args(["monitor"])
         self.assertEqual(error.exception.code, 2)
+
+    def test_evaluate_json_reports_cumulative_admission_for_both_estimators(self):
+        artifact = make_artifact()
+        embeddings = [[1.0, 0.0], [0.0, 1.0], [2.0, 0.0], [0.0, 2.0]]
+        base_scores = SDMModel(artifact).score(embeddings)
+        scores = tuple(
+            replace(score, centroid_region_alpha=centroid, lower_region_alpha=lower)
+            for score, centroid, lower in zip(
+                base_scores, (0.9, 0.8, 0.9, 0.0), (0.9, 0.0, 0.8, 0.0)
+            )
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            model = root / "fixture.sdmkitmodel"
+            write_artifact(model, artifact)
+            dataset = root / "data.jsonl"
+            self._write_jsonl(dataset, [
+                {"id": str(index), "label": index % 2, "embedding": embedding}
+                for index, embedding in enumerate(embeddings)
+            ])
+            output_path = root / "evaluation.json"
+            with patch("reexpress_sdm.cli._score_dataset", return_value=scores):
+                self._run([
+                    "evaluate", "--model", str(model), "--input", str(dataset),
+                    "--output", str(output_path), "--matching_device", "cpu",
+                ])
+            report = json.loads(output_path.read_text())["evaluation"]
+            self.assertEqual(report["evaluatedRows"], 4)
+            expected = {
+                "centroid": [(0.9, 2, 0.5), (0.8, 3, 0.75)],
+                "lower": [(0.9, 1, 0.25), (0.8, 2, 0.5)],
+            }
+            for estimator, expected_rows in expected.items():
+                with self.subTest(estimator=estimator):
+                    rows = report[estimator]["perAlphaCumulative"]
+                    self.assertEqual([
+                        (row["alpha"], row["admissionCount"], row["admission"])
+                        for row in rows
+                    ], expected_rows)
+                    for row in rows:
+                        self.assertNotIn("coverageCount", row)
+                        self.assertNotIn("coverage", row)
 
     def test_artifact_data_evaluation_and_training_commands(self):
         with tempfile.TemporaryDirectory() as directory:

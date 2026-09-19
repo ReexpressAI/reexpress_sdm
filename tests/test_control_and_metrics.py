@@ -26,19 +26,30 @@ class ControlAndMetricsTests(unittest.TestCase):
     def test_evaluator_reports_all_conditional_cells_and_minima(self):
         report = Evaluator(2, alphas=(0.95, 0., 0.90)).evaluate(self.scores, self.labels)
         centroid_95 = report["centroid"]["perAlphaCumulative"][0]
-        self.assertEqual(centroid_95["coverageCount"], 2)
-        self.assertEqual(centroid_95["coverage"], 0.5)
+        self.assertEqual(centroid_95["admissionCount"], 2)
+        self.assertEqual(centroid_95["admission"], 0.5)
         self.assertEqual(centroid_95["marginal"]["accuracy"], 1.0)
         self.assertEqual(centroid_95["minimumConditionalAccuracy"], 1.0)
         centroid_90 = report["centroid"]["perAlphaCumulative"][1]
+        self.assertEqual(centroid_90["admissionCount"], 3)
+        self.assertEqual(centroid_90["admission"], 0.75)
         self.assertAlmostEqual(centroid_90["marginal"]["accuracy"], 2.0 / 3.0)
         self.assertEqual(centroid_90["minimumConditionalAccuracy"], 0.5)
         lower_95 = report["lower"]["perAlphaCumulative"][0]
+        self.assertEqual(lower_95["admissionCount"], 1)
+        self.assertEqual(lower_95["admission"], 0.25)
         self.assertFalse(lower_95["allConditionalCellsDefined"])
         self.assertIsNone(lower_95["minimumConditionalAccuracy"])
         self.assertEqual(lower_95["minimumDefinedTrueClassAccuracy"], 1.0)
         self.assertEqual(lower_95["byTrueClass"][1]["count"], 0)
         self.assertFalse(lower_95["byTrueClass"][1]["defined"])
+        lower_90 = report["lower"]["perAlphaCumulative"][1]
+        self.assertEqual(lower_90["admissionCount"], 2)
+        self.assertEqual(lower_90["admission"], 0.5)
+        for estimator in ("centroid", "lower"):
+            for row in report[estimator]["perAlphaCumulative"]:
+                self.assertNotIn("coverageCount", row)
+                self.assertNotIn("coverage", row)
 
     def test_policy_does_not_change_score_facts(self):
         policy = SelectionPolicy(0.95, EstimatorKind.CENTROID)
@@ -94,7 +105,20 @@ class ControlAndMetricsTests(unittest.TestCase):
             [row["alpha"] for row in report["centroid"]["perAlphaCumulative"]],
             [0.95],
         )
-        self.assertEqual(report["centroid"]["perAlphaCumulative"][0]["coverage"], 1.0)
+        for estimator in ("centroid", "lower"):
+            row = report[estimator]["perAlphaCumulative"][0]
+            self.assertEqual(row["admissionCount"], 2)
+            self.assertEqual(row["admission"], 1.0)
+
+    def test_evaluator_admission_is_undefined_without_known_labels(self):
+        report = Evaluator(2, alphas=(0.95,)).evaluate(self.scores[:2], (-1, -99))
+        self.assertEqual(report["evaluatedRows"], 0)
+        for estimator in ("centroid", "lower"):
+            row = report[estimator]["perAlphaCumulative"][0]
+            self.assertEqual(row["admissionCount"], 0)
+            self.assertIsNone(row["admission"])
+            self.assertNotIn("coverageCount", row)
+            self.assertNotIn("coverage", row)
 
     def test_evaluator_rejects_malformed_scores(self):
         with self.assertRaises(ValueError):

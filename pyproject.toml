@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reexpress_sdm"
-version = "0.4.5"
+version = "0.4.6"
 description = "Portable Similarity-Distance-Magnitude estimation with PyTorch training and inference"
 readme = "README.md"
 authors = [{name = "Reexpress AI, Inc.", email = "ai.science@re.express"}]

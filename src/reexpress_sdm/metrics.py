@@ -165,8 +165,8 @@ def evaluate_scores(
             summary.update(
                 {
                     "alpha": alpha,
-                    "coverageCount": int(np.sum(selected)),
-                    "coverage": float(np.mean(selected)) if selected.size else None,
+                    "admissionCount": int(np.sum(selected)),
+                    "admission": float(np.mean(selected)) if selected.size else None,
                 }
             )
             per_alpha.append(summary)

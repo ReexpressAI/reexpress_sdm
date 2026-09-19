@@ -455,7 +455,7 @@ def build_artifact(
     representation_fingerprint: str = "embedding_v1",
     model_id: str | None = None,
     producer_name: str = "reexpress_sdm",
-    producer_version: str = "0.4.5",
+    producer_version: str = "0.4.6",
     metadata: Mapping[str, Any] | None = None,
     calibration_rows: Sequence[Mapping[str, Any]] | None = None,
 ) -> SDMArtifact:

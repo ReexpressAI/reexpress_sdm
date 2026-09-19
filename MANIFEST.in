@@ -1,4 +1,4 @@
-include README.md LICENSE
+include README.md CHANGELOG.md LICENSE
 recursive-include docs *.md
 recursive-include scripts *.py
 recursive-include tests *.py *.json *.jsonl *.f32 *.npy *.md
