@@ -1,0 +1,474 @@
+<!doctype html>
+<!-- Copyright Reexpress AI, Inc. All rights reserved. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A hands-on guide to training, calibrating, evaluating, and scoring with the reexpress_sdm Python CLI, then exploring results in Reexpress two.">
+<title>Getting started with reexpress_sdm · Reexpress</title>
+<style>
+:root{color-scheme:light;--canvas:#f5f6f8;--panel:#fff;--raised:#e8f2ff;--border:#d9e0e8;--accent:#0057b3;--ink:#202b36;--muted:#596879;--green:#365e4f;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}html{scroll-padding-top:28px}body{margin:0;background:var(--canvas);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible,summary:focus-visible,pre:focus-visible{outline:3px solid #347fcc;outline-offset:4px;border-radius:4px}h1,h2,h3,p,figure{margin:0}h1,h2,h3{line-height:1.2;letter-spacing:-.025em}h1{font-size:clamp(34px,4.5vw,51px);max-width:650px}h2{font-size:clamp(24px,3vw,30px)}h3{font-size:20px}p{margin:17px 0;overflow-wrap:anywhere}code{font-family:var(--mono);font-size:.87em;background:#edf1f6;border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}
+.skip{position:fixed;z-index:20;top:8px;left:8px;background:white;padding:10px 18px;transform:translateY(-180%)}.skip:focus{transform:none}.page{max-width:1390px;margin:0 auto;display:grid;grid-template-columns:236px minmax(0,1fr);gap:38px;padding:32px 38px 72px}.sidebar{position:sticky;top:28px;align-self:start;max-height:calc(100vh - 56px);overflow:auto;padding:8px 4px 18px}.wordmark{font-weight:730;letter-spacing:-.045em;font-size:25px;line-height:1.2}.brand-caption{font-size:11px;color:var(--muted);margin-top:9px;letter-spacing:.02em}.nav-label,.eyebrow{text-transform:uppercase;font-size:11px;letter-spacing:.13em;font-weight:700;color:var(--muted)}.nav-label{margin:34px 0 12px;padding-left:10px}.toc{list-style:none;margin:0;padding:0}.toc a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:#4c5969;padding:9px 10px;font-size:13px;line-height:1.4;border-radius:7px;border:1px solid transparent}.toc a:hover{background:#eaf0f7}.toc a[aria-current=true]{color:var(--accent);background:var(--raised);border-color:#cfdfef;font-weight:600}.nav-index{font:11px var(--mono);color:#63778b;min-width:17px}.nav-footer{font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:24px;padding:18px 10px 0}.nav-footer a{display:block;margin-bottom:8px}.mobile-nav{display:none}main{min-width:0}.hero{overflow:hidden;position:relative;background:#fff;border:1px solid var(--border);border-radius:16px;padding:38px 40px 28px;box-shadow:0 4px 20px #283a5310}.hero:after{content:"";position:absolute;width:190px;height:190px;border:26px solid #dce9e4;border-radius:50%;right:-112px;top:-90px;pointer-events:none}.hero .eyebrow{color:var(--green);margin-bottom:13px}.hero h1{position:relative;z-index:1}.hero .subtitle{font-size:18px;color:var(--muted);margin:14px 0 25px}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{font-size:11px;font-weight:650;color:#365571;background:#eff4f9;border:1px solid #dfe7ef;border-radius:999px;padding:4px 10px}.intro{margin-top:26px;border-top:1px solid var(--border);padding-top:5px;font-size:15px}.intro p:first-child{border-left:3px solid var(--accent);padding-left:14px}.section{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:30px 36px;margin-top:24px;box-shadow:0 3px 16px #283a5306;scroll-margin-top:24px}.section-header{padding-bottom:20px;margin-bottom:21px;border-bottom:1px solid var(--border)}.section-header .eyebrow{margin-bottom:8px;color:var(--accent)}.section.optional .eyebrow{color:var(--green)}.section.tip{background:#f0f6ff}.section p:last-child{margin-bottom:0}.subheading{margin-top:28px;margin-bottom:14px}.citation{font-size:14px;border-left:2px solid var(--border);padding-left:16px;color:#536271}.representation{font-family:var(--mono);font-size:13px;padding:16px 18px;background:#eef5f2;border:1px solid #d6e5dc;border-radius:8px;line-height:1.7}.callout{padding:16px 19px;border:1px solid #cbdeef;border-left:3px solid var(--accent);border-radius:6px;background:#f1f7fe;font-size:15px}.code-panel{margin:20px 0;border:1px solid #cfd9e4;border-radius:9px;overflow:hidden;background:#f7f9fc}.code-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;background:#edf2f7;border-bottom:1px solid #d8e1ea;min-height:43px;font-size:11px;letter-spacing:.03em;font-weight:650;color:#53667b}.copy-button,.image-open,.close-dialog{color:#294f78;background:#fff;border:1px solid #cbd7e4;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:600;line-height:1.6;letter-spacing:0}.copy-button:hover,.image-open:hover,.close-dialog:hover{background:#e8f2ff}.copy-button{min-width:57px}.enhanced{display:none}.js-ready .enhanced{display:inline-block}pre{margin:0;padding:18px 19px;overflow:auto;max-width:100%;font:12.5px/1.8 var(--mono);tab-size:2;white-space:pre;-webkit-overflow-scrolling:touch}pre code{font:inherit;color:#213a56;background:none;padding:0;border:0;overflow-wrap:normal}.output,.example{background:#fafbfc}.output pre code,.example pre code{color:#647383}.output .code-toolbar,.example .code-toolbar{background:#f2f4f7}.optional-code pre code{color:#526876}figure{margin:24px -10px 32px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f8fafc}figure img{display:block;width:100%;height:auto;aspect-ratio:1924/1487;object-fit:contain;background:#fff}figcaption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border-top:1px solid var(--border);font-size:12px;line-height:1.5}.figure-number{font-weight:700;color:var(--accent);display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase}.figure-actions{display:flex;gap:13px;align-items:center;flex-shrink:0}.figure-actions a{font-size:11px}.footer{margin:28px 4px 0;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px}.footer a{white-space:nowrap}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}dialog{border:1px solid var(--border);border-radius:12px;padding:0;width:min(96vw,1960px);max-width:96vw;max-height:94vh;background:white;box-shadow:0 15px 70px #0004}dialog::backdrop{background:#142432a8}.dialog-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 18px;border-bottom:1px solid var(--border);font-size:13px}.dialog-image{overflow:auto;max-height:calc(94vh - 58px)}.dialog-image img{display:block;width:1924px;max-width:none;height:auto}.dialog-hint{color:var(--muted);font-size:11px;margin-left:10px}
+@media(min-width:1500px){.page{grid-template-columns:245px minmax(0,1fr);gap:48px}}
+@media(max-width:1050px){.page{grid-template-columns:205px minmax(0,1fr);padding:24px;gap:24px}.hero{padding:28px}.section{padding:26px}.toc a{font-size:12px}.brand-caption{font-size:10px}}
+@media(max-width:780px){.page{display:block;padding:16px 16px 40px}.sidebar{display:none}.mobile-nav{display:block;border:1px solid var(--border);background:#fff;border-radius:9px;margin-bottom:16px;padding:10px 14px}.mobile-nav summary{cursor:pointer;font-size:13px;font-weight:650;color:var(--accent)}.mobile-nav .toc{padding-top:12px}.mobile-nav .toc a{font-size:14px}.hero{padding:26px 22px}.hero .subtitle{font-size:16px}.section{padding:23px 22px}.section-header{padding-bottom:16px;margin-bottom:16px}body{font-size:15px}figure{margin:22px -8px}figcaption{flex-wrap:wrap}.figure-actions{width:100%;justify-content:space-between}.footer{display:block}.footer a{display:block;margin-top:10px}pre{font-size:12px;padding:14px}.dialog-hint{display:none}}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media print{@page{margin:16mm}body{background:white;font-size:10pt}.page{display:block;padding:0;max-width:none}.sidebar,.mobile-nav,.enhanced,.skip,.figure-actions,dialog{display:none!important}.hero,.section{box-shadow:none;border-color:#ccc;padding:18px;margin-top:18px;break-inside:auto}.hero h1{font-size:28pt}.section h2{font-size:18pt}.section-header{break-after:avoid}.code-panel,figure{break-inside:avoid}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:8pt}pre code{overflow-wrap:anywhere}a{color:inherit}figure{margin:18px 0}figure img{max-height:180mm;object-fit:contain}p{orphans:3;widows:3}.footer{font-size:8pt}}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main-content">Skip to tutorial</a>
+<div class="page">
+<aside class="sidebar" aria-label="Tutorial navigation">
+<div class="wordmark">Reexpress AI</div><div class="brand-caption">Similarity · Distance · Magnitude</div>
+<div class="nav-label">Python package · Guide</div><ol class="toc"><li><a href="#takeaway"><span>Takeaway</span></a></li><li><a href="#overview"><span>Overview</span></a></li><li><a href="#install"><span>Install the package</span></a></li><li><a href="#shell-comments"><span>Pasting in zsh</span></a></li><li><a href="#download"><span>Download the data</span></a></li><li><a href="#train"><span>Train and calibrate</span></a></li><li><a href="#evaluate"><span>Evaluate and score</span></a></li><li><a href="#recalibrate"><span>Recalibrate</span></a></li><li><a href="#continue-training"><span>Continue training</span></a></li><li><a href="#selected-splits"><span>Best iteration splits</span></a></li><li><a href="#convert"><span>Convert datasets</span></a></li><li><a href="#reexpress-two"><span>Explore in Reexpress two</span></a></li><li><a href="#conclusion"><span>Where to go next</span></a></li></ol>
+<div class="nav-footer"><a href="getting_started_tutorial_source.sh">Companion shell tutorial</a><span>reexpress_sdm · CLI + Python API</span></div>
+</aside>
+<main id="main-content">
+<details class="mobile-nav"><summary>On this page</summary><ol class="toc"><li><a href="#takeaway"><span>Takeaway</span></a></li><li><a href="#overview"><span>Overview</span></a></li><li><a href="#install"><span>Install the package</span></a></li><li><a href="#shell-comments"><span>Pasting in zsh</span></a></li><li><a href="#download"><span>Download the data</span></a></li><li><a href="#train"><span>Train and calibrate</span></a></li><li><a href="#evaluate"><span>Evaluate and score</span></a></li><li><a href="#recalibrate"><span>Recalibrate</span></a></li><li><a href="#continue-training"><span>Continue training</span></a></li><li><a href="#selected-splits"><span>Best iteration splits</span></a></li><li><a href="#convert"><span>Convert datasets</span></a></li><li><a href="#reexpress-two"><span>Explore in Reexpress two</span></a></li><li><a href="#conclusion"><span>Where to go next</span></a></li></ol></details>
+<header class="hero">
+<div class="eyebrow">Reexpress_sdm · Getting started</div>
+<h1>From the command line<br>to robust and interpretable<br>calibrated predictions.</h1>
+<p class="subtitle">A hands-on tutorial for the reexpress_sdm Python package.</p>
+<div class="chips"><span class="chip">CLI + Python API</span><span class="chip">Instruction following</span><span class="chip">Reexpress two</span></div>
+<div class="intro"><p>The following sections are meant to be pasted into the terminal, rather than executed as a single script. (The shell-formatted tutorial, getting_started_tutorial_source.sh, is saved in this directory and has the core content if you would prefer to follow along in a text editor.)</p><p>This provides a tutorial for the command line interface (CLI), which exposes the core behavior of the package. For additional flexibility, use the Python API. Even if you plan to use the latter, this tutorial can be informative to step through to get an overview of the key behavior.</p></div>
+</header>
+<section id="takeaway" class="section" aria-labelledby="takeaway-title"><header class="section-header"><div class="eyebrow">Takeaway</div><h2 id="takeaway-title">SDM Estimators unlock Actionable Interpretability for neural networks</h2></header>
+    <ul>
+    <li><code>reexpress_sdm</code> provides point predictions and calibrated estimates of the predictive uncertainty for small |Y| classification tasks (typically 2-5 classes). The input is cached vectors (typically derived from the hidden-states of a neural language model).</li>
+
+    <li>Before a test prediction can be made, the model must be trained and calibrated. The code trains and calibrates a small neural network (specifically, a Similarity-Distance-Magnitude activation) over the input vectors for the given classification task with user-provided labeled data. Once trained and calibrated, that model can then be used for predicting over new, unseen test instances. Training and testing involve L^2 nearest-neighbor matching.</li>
+
+    <li>In the per-instance output at test-time, the field "prediction" provides the point prediction and "centroidRegionAlpha" provides a conservative estimate into which class- and prediction-conditional region of the held-out calibration set the prediction falls. A "centroidRegionAlpha" value of 0.95, for example, is an estimate that the datapoint falls into a region of the distribution for which the class- and prediction-conditional accuracy is <em>at least</em> 0.95. A value of 0.0 indicates no region was assigned; such points should be treated as out-of-distribution to the estimator.</li>
+
+    <li>The "centroidRegionAlpha" estimate corresponds to the nested HR regions defined in <a href="https://aclanthology.org/2026.findings-acl.1109/">"Similarity-Distance-Magnitude Activations"</a> (published in ACL Findings 2026) and <a href="https://github.com/ReexpressAI/sdm_activations/blob/main/research_notes/nested_sdm_estimators.pdf">"Research Note: Nested Similarity-Distance-Magnitude Estimators"</a>.</li>
+
+    <li>This is a more stringent calibration criterion than a prediction-conditional estimate. It is an easy-to-understand quantity useful for typical applications involving conditional-branching decisions with language models.</li>
+
+    <li>Typical use-cases:</li>
+    <ul>
+    <li>Calibrating "LLM-as-a-Judge", including an ensemble of such models</li>
+
+    <li>Estimating uncertainty over retrieval and tool-calls</li>
+
+    <li>Building continual-learning and memory-based systems</li>
+
+    <li>More generally, reexpress_sdm unlocks Actionable Interpretability for neural network systems, since the metric-learning, geometry-aware uncertainty estimates have a direct instance-wise mapping to the training/calibration data, enabling uncertainty-aware <em>interpretability-by-exemplar</em>.</li>
+    </ul>
+    </ul>
+</section>
+<section id="overview" class="section" aria-labelledby="overview-title"><header class="section-header"><div class="eyebrow">Overview</div><h2 id="overview-title">The example task: Binary classification of instruction-following</h2></header>
+<p>This demo considers the task of binary classification of language model instruction-following, as considered in the following work:</p>
+<p class="citation">Allen Schmaltz. 2026. Introspectable, Updatable, and Uncertainty-aware Classification of Language Model Instruction-following. In Proceedings of the ACM Conference on AI and Agentic Systems (CAIS '26). Association for Computing Machinery, New York, NY, USA, 1259--1269. <a href="https://doi.org/10.1145/3786335.3813214">https://doi.org/10.1145/3786335.3813214</a>.</p>
+
+<p>We seek to classify whether or not the generated response from a model correctly and faithfully answers the user's instructions, where the ground truth labels correspond to y = 0 = "Not Verified" and y = 1 = "Verified". In this case, for illustrative purposes, we will consider a relatively small sample of data from <a href="https://huggingface.co/datasets/ReexpressAI/OpenVerification1">OpenVerification1</a>. In this sample, the model summary and explanation are generated by gpt-5.5-2026-04-23. The file eval_ood.jsonl is a synthetically generated far out-of-distribution dataset constructed by randomly shuffling the characters of the model summary and explanation. In this case, the embeddings of the agreement model are from the publicly available mlx-community/gemma-4-31b-it-4bit model. The embeddings are available here <a href="https://github.com/ReexpressAI/OpenVerification/releases/download/v0.1.0-data/instruction_following_demo_gemma_4_31b_it_4bit.zip">instruction_following_demo_gemma_4_31b_it_4bit.zip</a>. The embeddings are constructed from the final-layer hidden states, concatenating the following:</p>
+<p class="representation">max-pool over the sequence :: mean-pool over the sequence :: hidden-state of the final token (that estimates Yes | No)</p>
+<p>As such, the embeddings contain 3 x 5376 = 16128 dimensions.</p>
+<p>To streamline the data files, the <code>document</code> field in the JSON only includes the agreement prompt given to the mlx-community/gemma-4-31b-it-4bit model in generating the embeddings. The <code>attributes</code> field is omitted, and as such, the binary classification from gpt-5.5-2026-04-23 is not included.</p>
+<p>The script at <a href="https://github.com/ReexpressAI/reexpress_mcp_server/blob/main/code/data_processing/code/mlx_examples/small_illustrative_demo_for_using_gemma4_with_v2.5.1_data.sh">small_illustrative_demo_for_using_gemma4_with_v2.5.1_data.sh</a> shows how these embeddings were extracted.</p>
+<p>(The <code>.jsonl</code> input data format is easy for you, or your agents, to construct from alternative datasets and can be used as a drop-in replacement for the instruction_following_demo_gemma_4_31b_it_4bit.zip data if you want to walk through this tutorial with other models or tasks.)</p>
+</section>
+<section id="install" class="section" aria-labelledby="install-title"><header class="section-header"><div class="eyebrow">01 · Set up</div><h2 id="install-title">Install the Python package</h2></header>
+<p>First, create a local environment, such as with conda (Anaconda, Miniconda, or Miniforge: <a href="https://docs.conda.io/en/latest/">conda documentation</a>), or related virtual environments:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-1" aria-label="Copy terminal block 1">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-1">conda create -n re_python_v1 python=3.12</code></pre></div>
+<p>after completing the tutorial, the environment can be removed:</p>
+<div class="code-panel optional-code"><div class="code-toolbar"><span>Optional · uncomment to run</span><button type="button" class="copy-button enhanced" data-copy="code-2" aria-label="Copy optional · uncomment to run block 2">Copy</button></div><pre tabindex="0" aria-label="Optional · uncomment to run"><code id="code-2"># conda env remove -n re_python_v1</code></pre></div>
+<p>Next, activate the environment:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-3" aria-label="Copy terminal block 3">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-3">conda activate re_python_v1</code></pre></div>
+<p>Install the package:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-4" aria-label="Copy terminal block 4">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-4">python -m pip install reexpress-sdm</code></pre></div>
+<p>Alternatively, you can create an editable install from source in the standard way:</p>
+<div class="code-panel optional-code"><div class="code-toolbar"><span>Optional · uncomment to run</span><button type="button" class="copy-button enhanced" data-copy="code-5" aria-label="Copy optional · uncomment to run block 5">Copy</button></div><pre tabindex="0" aria-label="Optional · uncomment to run"><code id="code-5"># cd reexpress_sdm # path to the GitHub repo
+# python -m pip install -e .</code></pre></div>
+</section>
+<section id="shell-comments" class="section tip" aria-labelledby="shell-comments-title"><header class="section-header"><div class="eyebrow">Terminal tip</div><h2 id="shell-comments-title">Pasting comments in zsh</h2></header>
+<p>As a side note, zsh (the default shell on macOS), unlike Bash, doesn&#x27;t recognize <code>#</code> comments when you type them interactively, so pasting a line like <code># some comment</code> into the terminal will print an error. You can enable such comments by adding <code>setopt interactivecomments</code> to your <code>~/.zshrc</code> and opening a new terminal (or running <code>source ~/.zshrc</code>).</p>
+</section>
+<section id="download" class="section" aria-labelledby="download-title"><header class="section-header"><div class="eyebrow">02 · Get the data</div><h2 id="download-title">Download the example data</h2></header>
+<p> Choose a ${PROJECT_DIR} on your local drive and then download the data. ${PROJECT_DIR} will be used to store the data, models, and output for this tutorial. </p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-6" aria-label="Copy terminal block 6">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-6">PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # choose a suitable directory; we will be using this below to organize the output
+
+mkdir -p &quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+cd &quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+curl -L -O https://github.com/ReexpressAI/OpenVerification/releases/download/v0.1.0-data/instruction_following_demo_gemma_4_31b_it_4bit.zip</code></pre></div>
+<p>And then unzip:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-7" aria-label="Copy terminal block 7">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-7">unzip instruction_following_demo_gemma_4_31b_it_4bit.zip</code></pre></div>
+<p>This will take about 1.7 GB of storage (plus about 700 MB for the original .zip file).</p>
+<p>As noted above, this binary classification task is to predict whether or not the generated response from a model correctly and faithfully answers the user's instructions, where the ground truth labels correspond to "Not Verified" (class 0) or "Verified" (class 1).</p>
+</section>
+<section id="train" class="section" aria-labelledby="train-title"><header class="section-header"><div class="eyebrow">03 · Train</div><h2 id="train-title">Train and calibrate a model</h2></header>
+<p><code>sdm train</code> learns the parameters of the SDM activation (the final-layer adaptor) AND runs the calibration algorithm to partition the calibration set. Once <code>sdm train</code> completes, the model is ready to be used to predict over new, unseen data.</p>
+<p>Here, we train for 2 iterations of 500 epochs each. For the purposes of the tutorial, feel free to reduce the number of iterations or epochs for faster training.</p><p>As a back-of-the-envelope guide, each epoch on an M2 Ultra 76 core Mac Studio takes about 0.66 seconds, and around 11 minutes for the full run.</p><p>For a production setting, we would train with additional iterations and epochs (and ideally, a larger dataset).</p><p>Interestingly, an advantageous property of the SDM estimator is that such calibration is relatively robust to under-trained, or otherwise poorly optimized, models. (The estimator will tend to be conservative in those cases. Training the adaptor using the standard cross-entropy loss, which is equivalent to the SDM loss with the instance-wise regularization terms set at a constant q=e-2 and d=1, will also tend to not &quot;break&quot; calibration, but the estimator will tend to be more conservative than when training with the SDM loss.)</p><p>Such variations are easy to examine here and with the macOS app Reexpress two. Your exact results below may differ from ours depending on the options you choose.</p>
+<p>As with other commands, use <code>sdm train --help</code> to see the available arguments (and defaults).</p>
+<p>Note that <code>--composition</code> determines what fields in the JSON lines files will be used as input to the SDM activation. For convenience, we separate &quot;embedding&quot; and &quot;attributes&quot; if, for bookkeeping, you want to separate the core embeddings from other features, but you are free to choose the semantics of those fields, or to altogether ignore that distinction and only use the &quot;embedding&quot; field, or only the &quot;attributes&quot; field.</p><p>If you choose &quot;embedding+attributes&quot;, both vectors are concatenated together as input to the SDM activation. The important point is to be consistent for a given model and subsequent evaluation/deployment.</p>
+<p class="callout">FYI: If specified at training, the same values for <code>--representation_fingerprint</code> and <code>--class_names</code> must be used at test time, including when importing into Reexpress two.</p>
+<p>First, create the output directories, and for readability, set local environment variables with the file/directory paths:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-8" aria-label="Copy terminal block 8">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-8">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+TRAIN_FILE=&quot;${DATA_DIR}/train.jsonl&quot;
+CALIBRATION_FILE=&quot;${DATA_DIR}/calibration.jsonl&quot;
+
+MODEL_DIR=&quot;${PROJECT_DIR}/models/${TASK_LABEL}.${MODEL_LABEL}&quot;
+mkdir -p &quot;${MODEL_DIR}&quot;
+
+MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.sdmkitmodel&quot;
+
+ALPHA_RESOLUTION=0.01
+EXEMPLAR_DIMENSION=1000
+LEARNING_RATE=0.000001
+
+echo &quot;${MODEL_DIR}/logs.txt&quot;  # training output is redirected to logs.txt; use `tail -f &quot;${MODEL_DIR}/logs.txt&quot;` to watch progress</code></pre></div>
+<div class="code-panel output"><div class="code-toolbar"><span>Example output</span></div><pre tabindex="0" aria-label="Example output"><code id="code-9">/Users/a/Documents/project_tutorials/models/instruction_following.gemma_4_31b_it_4bit/logs.txt</code></pre></div>
+<p>Next, kick-off training. The calibration step will run automatically once the weights of the SDM activation are learned. <code>sdm train</code> auto-selects the device (CUDA, then MPS, then CPU); add <code>--device=cpu|mps|cuda</code> to choose explicitly.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-10" aria-label="Copy terminal block 10">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-10">sdm train \
+--training=&quot;${TRAIN_FILE}&quot; \
+--calibration=&quot;${CALIBRATION_FILE}&quot; \
+--number_of_classes 2 \
+--representation_fingerprint embedding_v1 \
+--output &quot;${MODEL_FILE}&quot; \
+--alpha_resolution=${ALPHA_RESOLUTION} \
+--epochs 500 \
+--number_of_random_shuffles=2 \
+--batch_size 64 \
+--learning_rate ${LEARNING_RATE} \
+--max_neighbors 2048 \
+--exemplar_dimension ${EXEMPLAR_DIMENSION} \
+--composition=&quot;embedding&quot; \
+--report_output=&quot;${MODEL_DIR}/report.txt&quot; &gt; &quot;${MODEL_DIR}/logs.txt&quot; 2&gt;&amp;1
+
+echo &quot;${MODEL_DIR}/report.txt&quot;  # summary report of training</code></pre></div>
+<div class="code-panel output"><div class="code-toolbar"><span>Example output</span></div><pre tabindex="0" aria-label="Example output"><code id="code-11">/Users/a/Documents/project_tutorials/models/instruction_following.gemma_4_31b_it_4bit/report.txt</code></pre></div>
+<p><code>sdm artifact validate</code> checks the model file is well-formed:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-12" aria-label="Copy terminal block 12">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-12">sdm artifact validate --model &quot;${MODEL_FILE}&quot;</code></pre></div>
+<p><code>sdm artifact inspect</code> provides summary stats, including the q&#x27;_min values and thresholds for each calibration region for which the class- and prediction-conditional accuracy is estimated to be at least a given alpha:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-13" aria-label="Copy terminal block 13">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-13">sdm artifact inspect --model &quot;${MODEL_FILE}&quot;</code></pre></div>
+<p>In this case, the most conservative region into which the calibration set was able to be partitioned was alpha=0.99, followed by alpha 0.98 and 20 additional descending regions down to 0.51.</p>
+</section>
+<section id="evaluate" class="section" aria-labelledby="evaluate-title"><header class="section-header"><div class="eyebrow">04 · Evaluate</div><h2 id="evaluate-title">Evaluate and score the test sets</h2></header>
+<p>The following will score the two held-out evaluation files: The file with the prefix &quot;eval&quot; is a covariate-shifted test set, and the file with the prefix &quot;eval_ood&quot; is that same file but with the input randomly shuffled to create an out-of-distribution test set.</p>
+<p><code>sdm evaluate</code> generates an overall summary of the predictions and calibration given ground-truth labels (as we have here). The output is a JSON object.</p>
+<p><code>sdm score</code> generates per-document predictions with calibrated estimates of the predictive uncertainty, along with the constituent signals that were used to construct those uncertainty-estimates. By default, the nearest 25 documents in the support (training) set are also provided for interpretability-by-exemplar. The output is a JSON lines (.jsonl) with one output object per document.</p>
+<p>In the following, for illustrative purposes we run both <code>sdm evaluate</code> and <code>sdm score</code>, but they are not dependent on each other and can be run independently, as needed.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-14" aria-label="Copy terminal block 14">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-14">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+TRAIN_FILE=&quot;${DATA_DIR}/train.jsonl&quot;
+CALIBRATION_FILE=&quot;${DATA_DIR}/calibration.jsonl&quot;
+
+MODEL_DIR=&quot;${PROJECT_DIR}/models/${TASK_LABEL}.${MODEL_LABEL}&quot;
+mkdir -p &quot;${MODEL_DIR}&quot;
+
+MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.sdmkitmodel&quot;
+
+ALPHA_RESOLUTION=0.01
+EXEMPLAR_DIMENSION=1000
+LEARNING_RATE=0.000001
+
+EVAL_OUTPUT_DIR=&quot;${MODEL_DIR}/eval_output&quot;
+
+mkdir -p &quot;${EVAL_OUTPUT_DIR}&quot;
+
+for EVAL_LABEL in &quot;eval&quot; &quot;eval_ood&quot;; do
+
+EVAL_FILE=&quot;${DATA_DIR}/${EVAL_LABEL}.jsonl&quot;
+
+echo &quot;Processing ${EVAL_FILE}&quot;
+
+sdm evaluate \
+--model=&quot;${MODEL_FILE}&quot; \
+--input=&quot;${EVAL_FILE}&quot; \
+--output &quot;${EVAL_OUTPUT_DIR}/${EVAL_LABEL}.${MODEL_LABEL}.overall_evaluation_report.json&quot;
+
+echo &quot;Evaluation report at ${EVAL_OUTPUT_DIR}/${EVAL_LABEL}.${MODEL_LABEL}.overall_evaluation_report.json&quot;
+
+sdm score \
+--model=&quot;${MODEL_FILE}&quot; \
+--input=&quot;${EVAL_FILE}&quot; \
+--composition=&quot;embedding&quot; \
+--output &quot;${EVAL_OUTPUT_DIR}/${EVAL_LABEL}.${MODEL_LABEL}.per_document_scores.jsonl&quot;
+
+echo &quot;Per-document scores saved to ${EVAL_OUTPUT_DIR}/${EVAL_LABEL}.${MODEL_LABEL}.per_document_scores.jsonl&quot;
+
+done</code></pre></div>
+<p>Interpreting the output of <code>sdm score</code>: The JSON object for each document contains the values that were used to construct the calibration estimate. As noted above, by default, the 25 nearest matches in the support set are also returned. This enables interpretability of the estimate when further analysis is needed.</p><p>For typical applications, as a first pass, in addition to &quot;prediction&quot;, which indicates the predicted class, the key piece of information to focus on is the &quot;centroidRegionAlpha&quot; value. This is an estimate that the datapoint falls into a region of the distribution for which the class- and prediction-conditional accuracy is at least that value (e.g., 0.99 or 0.52).</p><p>When that value is 0.0, it means no region could be assigned, and the point should be treated as being out-of-distribution for the estimator.</p>
+<p>Reviewing the output of <code>sdm evaluate</code>, we see the marginal accuracy of the 0.99 region is 1.0 (81 out of 81 documents) for the documents in the  &quot;eval&quot; file. </p><p>The overall <em>marginal</em> accuracy (i.e., the accuracy averaged over the full dataset, not just a particular region) is much lower at 0.93, which without the SDM estimator, may come as a surprise to users, since the marginal accuracy of the calibration set was 0.98 (as shown in best_calibration_scored.overall_evaluation_report.json, the score report for the calibration set, generated below).</p>
+<p>With the &quot;eval_ood&quot; file, no points are in the 0.99 region, reflecting that the distribution is relatively unlike that of the calibration set.</p>
+<p>In other words, despite the substantial distribution shift, the SDM estimator has achieved the desired conservative notion of calibration (class- and prediction-conditional accuracy at least the given value) by correctly assigning correspondingly lower probabilities to datapoints that are unlike those seen in training and calibration.</p>
+</section>
+<section id="recalibrate" class="section optional" aria-labelledby="recalibrate-title"><header class="section-header"><div class="eyebrow">Optional</div><h2 id="recalibrate-title">Recalibrate at a new resolution</h2></header>
+<p>Without retraining the full model, we can also examine rerunning the calibration algorithm at a different resolution. (In Reexpress two, this can be achieved by going to the Train tab and the section &quot;Recalibrate the fixed adaptor&quot;. In Reexpress two, you can also preview such changes without overwriting the model if you click &quot;Preview ladder&quot;.)</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-15" aria-label="Copy terminal block 15">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-15">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+TRAIN_FILE=&quot;${DATA_DIR}/train.jsonl&quot;
+CALIBRATION_FILE=&quot;${DATA_DIR}/calibration.jsonl&quot;
+
+MODEL_DIR=&quot;${PROJECT_DIR}/models/${TASK_LABEL}.${MODEL_LABEL}&quot;
+mkdir -p &quot;${MODEL_DIR}&quot;
+
+MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.sdmkitmodel&quot;
+
+NEW_ALPHA_RESOLUTION=0.05
+
+RECALIBRATED_MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.recalibrated_at_${NEW_ALPHA_RESOLUTION}.sdmkitmodel&quot;</code></pre></div>
+<p>Note that we need to specify a new model path (or choose <code>--overwrite</code>).</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-16" aria-label="Copy terminal block 16">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-16">sdm recalibrate \
+--model=&quot;${MODEL_FILE}&quot; \
+--output &quot;${RECALIBRATED_MODEL_FILE}&quot; \
+--alpha_resolution=${NEW_ALPHA_RESOLUTION} \
+--report_output=&quot;${MODEL_DIR}/report.recalibrated_at_${NEW_ALPHA_RESOLUTION}.txt&quot;
+
+sdm artifact inspect --model &quot;${RECALIBRATED_MODEL_FILE}&quot;</code></pre></div>
+<p>In this case 8 regions are found: 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.6, 0.55. Evaluation then needs to be rerun with this updated model (as described in the previous section), but substituting this new ${RECALIBRATED_MODEL_FILE} in place of the original ${MODEL_FILE}.</p>
+<p>(The remaining sections use the original ${MODEL_FILE}.)</p>
+</section>
+<section id="continue-training" class="section optional" aria-labelledby="continue-training-title"><header class="section-header"><div class="eyebrow">Optional</div><h2 id="continue-training-title">Continue training from existing weights</h2></header>
+<p>It is also easy to continue training from an existing model by supplying the <code>--initial_model</code> argument to <code>sdm train</code> with the path to that existing model. Training will then use those weights for initialization. The training and calibration data need not be the same as when initially training, but the exemplar dimension, class order, input feature dimension, and representation fingerprint must stay fixed. Note that by default the data will continue to be randomly shuffled at the beginning of each training iteration (which is generally what you want), unless you choose <code>--do_not_shuffle_data</code>. (Such continued training is also possible in Reexpress two by going to the Train tab and choosing &quot;Start from: Active model weights&quot; instead of the default &quot;Start from: Fresh weights&quot;.)</p>
+<p>As a toy example here, we continue training for 2 iterations and 5 epochs with the same training and calibration data. In practice, one would use additional iterations and epochs.</p><p><em>Aside: In our earlier research code we had an option to directly add instances to the support set without retraining or recalibrating. (In this setting, directly modifying the support set can alter the calibrated probability while holding the argmax predictions unchanged.)</em></p><p><em>In this production code, training is sufficiently fast (and to avoid the complication of estimating bounds on calibration drift) that we instead require retraining (or continued training) when any changes are made to the training or calibration sets. (When changes are made to the training set, the top navigation bar in Reexpress two visually indicates that the estimator has become stale and needs to be trained.)</em></p><p>As noted above, <code>sdm train</code> learns the parameters of the SDM activation (the final-layer adaptor) AND runs the calibration algorithm to partition the calibration set. That is also true when continuing training.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-17" aria-label="Copy terminal block 17">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-17">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+TRAIN_FILE=&quot;${DATA_DIR}/train.jsonl&quot;
+CALIBRATION_FILE=&quot;${DATA_DIR}/calibration.jsonl&quot;
+
+MODEL_DIR=&quot;${PROJECT_DIR}/models/${TASK_LABEL}.${MODEL_LABEL}&quot;
+mkdir -p &quot;${MODEL_DIR}&quot;
+
+MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.sdmkitmodel&quot;
+
+ALPHA_RESOLUTION=0.01
+EXEMPLAR_DIMENSION=1000
+LEARNING_RATE=0.000001
+
+CONTINUED_TRAINING_MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.continued_training_example.sdmkitmodel&quot;
+
+sdm train \
+--initial_model=&quot;${MODEL_FILE}&quot; \
+--training=&quot;${TRAIN_FILE}&quot; \
+--calibration=&quot;${CALIBRATION_FILE}&quot; \
+--number_of_classes 2 \
+--representation_fingerprint embedding_v1 \
+--output &quot;${CONTINUED_TRAINING_MODEL_FILE}&quot; \
+--alpha_resolution=${ALPHA_RESOLUTION} \
+--epochs 5 \
+--number_of_random_shuffles=2 \
+--batch_size 64 \
+--learning_rate ${LEARNING_RATE} \
+--max_neighbors 2048 \
+--exemplar_dimension ${EXEMPLAR_DIMENSION} \
+--composition=&quot;embedding&quot; \
+--report_output=&quot;${MODEL_DIR}/continued_training_example.report.txt&quot; &gt; &quot;${MODEL_DIR}/continued_training_example.logs.txt&quot; 2&gt;&amp;1</code></pre></div>
+<p>(The remaining sections use the original ${MODEL_FILE}.)</p>
+</section>
+<section id="selected-splits" class="section" aria-labelledby="selected-splits-title"><header class="section-header"><div class="eyebrow">05 · Inspect selected splits</div><h2 id="selected-splits-title">Score the best iteration splits</h2></header>
+<p class="callout">One subtlety to training is that by default training involves randomly shuffling the training and calibration sets, so you can&#x27;t just naively run <code>sdm evaluate</code> or <code>sdm score</code> on the original training and calibration sets. Instead, we need to take into account the split into which each document landed, so that we do not match a training instance to itself if it landed in the support set, and more generally to get a representative evaluation of the training instances vs. the held-out calibration instances. The <code>sdm dataset export-sources</code> command can be used to produce such scores by using <code>--with_scores</code>. Here, we also introduce the <code>.sdmdataset</code> format, which is a data format that can be used instead of JSONL throughout the pipeline above, as well as with Reexpress two.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-18" aria-label="Copy terminal block 18">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-18">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+TRAIN_FILE=&quot;${DATA_DIR}/train.jsonl&quot;
+CALIBRATION_FILE=&quot;${DATA_DIR}/calibration.jsonl&quot;
+
+MODEL_DIR=&quot;${PROJECT_DIR}/models/${TASK_LABEL}.${MODEL_LABEL}&quot;
+mkdir -p &quot;${MODEL_DIR}&quot;
+
+MODEL_FILE=&quot;${MODEL_DIR}/${TASK_LABEL}.${MODEL_LABEL}.sdmkitmodel&quot;
+
+ALPHA_RESOLUTION=0.01
+EXEMPLAR_DIMENSION=1000
+LEARNING_RATE=0.000001
+
+EVAL_OUTPUT_DIR=&quot;${MODEL_DIR}/eval_output&quot;
+
+mkdir -p &quot;${EVAL_OUTPUT_DIR}&quot;</code></pre></div>
+<p>Supply both the original training and calibration files. The key parameter is the <code>--role</code>.</p>
+<p>Here, role is &quot;selected-training&quot;, which will use the indexes saved in the model file to correctly exclude self matches.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-19" aria-label="Copy terminal block 19">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-19">sdm dataset export-sources \
+--model=&quot;${MODEL_FILE}&quot; \
+--training=&quot;${TRAIN_FILE}&quot; \
+--calibration=&quot;${CALIBRATION_FILE}&quot; \
+--role=&quot;selected-training&quot; \
+--with_scores \
+--output=&quot;${EVAL_OUTPUT_DIR}/best_training_scored.sdmdataset&quot;</code></pre></div>
+<p>In this case, role is &quot;selected-calibration&quot;, which ensures that only the calibration set instances of the chosen model training iteration/epoch are scored.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-20" aria-label="Copy terminal block 20">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-20">sdm dataset export-sources \
+--model=&quot;${MODEL_FILE}&quot; \
+--training=&quot;${TRAIN_FILE}&quot; \
+--calibration=&quot;${CALIBRATION_FILE}&quot; \
+--role=&quot;selected-calibration&quot; \
+--with_scores \
+--output=&quot;${EVAL_OUTPUT_DIR}/best_calibration_scored.sdmdataset&quot;</code></pre></div>
+<p>After creating a project in Reexpress two from the ${MODEL_FILE}, you can then attach these scored splits for further analysis.</p><p>Go to the Data tab and choose &quot;Attach model sources&quot;. For best_training_scored.sdmdataset the option &quot;Source contains: Winning iteration training split&quot; will be auto-selected. Click Attach.</p><p>Next, do the same for best_calibration_scored.sdmdataset, for which &quot;Source contains: Winning iteration calibration split&quot; will be auto-selected.</p><p>(Alternatively you can upload the original training and calibration splits and choose &quot;Source contains: Original training split&quot; and &quot;Source contains: Original calibration split&quot;, but in that case, you will need to rescore the files in the app itself.)</p>
+<p>Outside of Reexpress two, we can also then evaluate using <code>sdm evaluate</code> to produce a summary evaluation report for the documents that formed the calibration set in the chosen iteration of learning the parameters of the SDM activation:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-21" aria-label="Copy terminal block 21">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-21">sdm evaluate \
+--model=&quot;${MODEL_FILE}&quot; \
+--input=&quot;${EVAL_OUTPUT_DIR}/best_calibration_scored.sdmdataset&quot; \
+--output &quot;${EVAL_OUTPUT_DIR}/best_calibration_scored.overall_evaluation_report.json&quot;</code></pre></div>
+<p class="callout">Note that there is currently no equivalent option for constructing a summary evaluation report for the best iteration training set directly from the CLI, but this can be readily achieved with the Python API:</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal · Python API</span><button type="button" class="copy-button enhanced" data-copy="code-22" aria-label="Copy terminal · python api block 22">Copy</button></div><pre tabindex="0" aria-label="Terminal · Python API"><code id="code-22">python - \
+  &quot;${MODEL_FILE}&quot; \
+  &quot;${EVAL_OUTPUT_DIR}/best_training_scored.sdmdataset&quot; \
+  &quot;${EVAL_OUTPUT_DIR}/best_training_scored.overall_evaluation_report.json&quot; &lt;&lt;&#x27;PY&#x27;
+import json
+import sys
+from pathlib import Path
+from reexpress_sdm import Dataset, SDMController
+
+model_path, input_path, output_path = sys.argv[1:]
+controller = SDMController.load(model_path)
+dataset = Dataset.load(
+    input_path,
+    expected_dimension=controller.model.embedding_dimension,
+    number_of_classes=controller.model.number_of_classes,
+    require_labels=True,
+)
+dataset.validate_class_names(controller.model.configuration[&quot;classNames&quot;])
+
+# Require the explicit exclusions saved by selected-training export.
+identities = [row[&quot;excludedSupportIndex&quot;] for row in dataset.rows]
+if any(index is None for index in identities):
+    raise ValueError(&quot;Every selected-training row must have a support exclusion&quot;)
+
+scores = controller.score(
+    dataset.vectors,
+    ids=dataset.ids,
+    representation_fingerprint=dataset.representation_fingerprint,
+    identity_support_indices=identities,
+)
+report = {
+    &quot;evaluation&quot;: controller.evaluate(scores, dataset.labels),
+    &quot;distribution&quot;: controller.summarize_distribution(scores),
+}
+Path(output_path).write_text(
+    json.dumps(report, indent=2, allow_nan=False) + &quot;\n&quot;, encoding=&quot;utf-8&quot;
+)
+PY</code></pre></div>
+<p>This recomputes scores with self-exclusions and writes the same evaluation and distribution report structure as the CLI. Missing exclusions cause an error.</p>
+</section>
+<section id="convert" class="section" aria-labelledby="convert-title"><header class="section-header"><div class="eyebrow">06 · Portable data</div><h2 id="convert-title">Convert JSONL to .sdmdataset</h2></header>
+<p>The previous section demonstrated converting the best iteration training/calibration splits to <code>.sdmdataset</code> files. In that case, the <code>.sdmdataset</code> file included scores, but that format can also be used more generally in place of the <code>.jsonl</code> format as input to the CLI, as well as with Reexpress two, for any data split. The advantage of the <code>.sdmdataset</code> format (which is a simple directory package) over <code>.jsonl</code> files is that it is generally more compact and faster to read and import into Reexpress two, since the embedding/attributes field is no longer stored in JSON. The rows remain readable. You can inspect the contents directly:</p>
+<div class="code-panel example"><div class="code-toolbar"><span>Example package contents</span></div><pre tabindex="0" aria-label="Example package contents"><code id="code-23">% ls &quot;${EVAL_OUTPUT_DIR}/best_calibration_scored.sdmdataset&quot;
+embeddings.npy    manifest.json    rows.jsonl</code></pre></div>
+<p>At the same time, the raw <code>.jsonl</code> files have the advantage of more general portability, as the embedding/attributes are simply saved as a numeric array in JSON.</p>
+<p>The following demonstrates how to convert the held-out test sets from above to the <code>.sdmdataset</code> format.</p>
+<div class="code-panel code"><div class="code-toolbar"><span>Terminal</span><button type="button" class="copy-button enhanced" data-copy="code-24" aria-label="Copy terminal block 24">Copy</button></div><pre tabindex="0" aria-label="Terminal"><code id="code-24">conda activate re_python_v1
+
+PROJECT_DIR=&quot;/Users/a/Documents/project_tutorials&quot;  # Update with the applicable path
+
+DATA_DIR=&quot;${PROJECT_DIR}/data/instruction_following_demo_gemma_4_31b_it_4bit&quot;
+
+TASK_LABEL=&quot;instruction_following&quot;
+MODEL_LABEL=&quot;gemma_4_31b_it_4bit&quot;
+
+for EVAL_LABEL in &quot;eval&quot; &quot;eval_ood&quot;; do
+
+EVAL_FILE=&quot;${DATA_DIR}/${EVAL_LABEL}.jsonl&quot;
+
+echo &quot;Processing ${EVAL_FILE}&quot;
+
+sdm dataset convert --input &quot;${EVAL_FILE}&quot; --output &quot;${DATA_DIR}/${EVAL_LABEL}.${MODEL_LABEL}.sdmdataset&quot; \
+  --representation_fingerprint embedding_v1
+  
+done</code></pre></div>
+<p>Aside: Note that <code>.jsonl</code> and <code>.ndjson</code> file extensions can be used interchangeably, but our convention is to always use <code>.jsonl</code>.</p>
+<p>The corresponding <code>.sdmdataset</code> can be noticeably more compact. In the above, eval.jsonl is about 60 MB whereas eval.gemma_4_31b_it_4bit.sdmdataset is about 19 MB.</p>
+</section>
+<section id="reexpress-two" class="section" aria-labelledby="reexpress-two-title"><header class="section-header"><div class="eyebrow">07 · Visualize</div><h2 id="reexpress-two-title">Explore the results in Reexpress two</h2></header>
+<p>All of the above functionality can be achieved without touching the command line (or Python code) by creating a project from scratch in Reexpress two, importing the files, and running training, calibration, and scoring in the app. Alternatively, if you (or your AI agent) have already trained a model as above, you can directly import it into the app for analysis. The app makes it easy to visualize the data; to examine the nearest exemplars; and also to change labels and move documents across data splits. Here, we describe the steps to upload a model and data that was processed with the Python package.</p>
+<p>First, open Reexpress two. Choose &quot;Start from a model&quot; and select the model file used above (instruction_following.gemma_4_31b_it_4bit.sdmkitmodel). Save the project file (<code>.sdmproject</code>) to your Mac&#x27;s local hard drive.</p>
+<p>The project file is itself a package directory (<code>.sdmproject</code>) which includes a database. You can always export models out to <code>.sdmkitmodel</code> files, and data to <code>.jsonl</code> and <code>.sdmdataset</code> files, to continue working with the Python package (and vice-versa).</p>
+<p>Once the project is created, in the Overview tab we can immediately see the summary of calibration, showing the alpha regions at 0.99, 0.98, 0.97, 0.96, 0.95, 0.94, 0.92, 0.9, 0.87, 0.84, 0.83, 0.8, 0.76, 0.74, 0.71, 0.65, 0.63, 0.61, 0.59, 0.55, 0.53, 0.51 and their associated Minimum rescaled Similarities and class thresholds.</p><figure id="figure-1">
+<img src="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/overview_imported_model_but_not_data.jpg" width="1924" height="1487" loading="lazy" decoding="async" alt="Reexpress two Overview showing an imported model with 22 calibrated regions and no datasets attached.">
+<figcaption><span><span class="figure-number">Figure 1</span> Overview: the imported model</span><span class="figure-actions"><button type="button" class="enhanced image-open" data-figure="figure-1" aria-label="Enlarge screenshot: Overview: the imported model">Enlarge image</button><a href="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/overview_imported_model_but_not_data.jpg">Original JPG</a></span></figcaption>
+</figure>
+<p>Next, navigate to the Data tab. As noted in the section &quot;Scoring the training and calibration sets&quot;, attach the scored splits for the best iteration training and calibration splits (i.e., best_calibration_scored.sdmdataset and best_training_scored.sdmdataset created by <code>sdm dataset export-sources</code>).</p><figure id="figure-2">
+<img src="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/attach_sources.jpg" width="1924" height="1487" loading="lazy" decoding="async" alt="Attach model sources dialog for the winning iteration training split, with document text and cached embeddings selected.">
+<figcaption><span><span class="figure-number">Figure 2</span> Attach the best iteration sources</span><span class="figure-actions"><button type="button" class="enhanced image-open" data-figure="figure-2" aria-label="Enlarge screenshot: Attach the best iteration sources">Enlarge image</button><a href="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/attach_sources.jpg">Original JPG</a></span></figcaption>
+</figure>
+<p>Next, we will also add our already-scored held-out test data. Still in the Data tab, click &quot;Import data&quot;. First, select eval.gemma_4_31b_it_4bit.per_document_scores.jsonl in the open file dialog box. For the dataset split, select &quot;Evaluation&quot;. (In this case, the file doesn&#x27;t have an &quot;attributes&quot; field, so keeping the default &quot;Use attributes vectors when present&quot; has no effect. If the file did have an &quot;attributes&quot; field, it would be necessary to uncheck &quot;Use attributes vectors when present&quot; since <code>--composition</code>=&quot;embedding&quot; was used during training.)</p><p>Next, do the same for eval_ood.gemma_4_31b_it_4bit.per_document_scores.jsonl, again selecting &quot;Evaluation&quot; for the dataset split.</p>
+<p>In the Train tab, we can view the training curves for both iterations. In this view, we can also start training again, or continue training from these weights. And we can always walk back to previous models by activating the weights in the &quot;Model History&quot; section at the bottom of the screen. (Note that when activating a new set of weights, it is necessary to rescore the documents.)</p><figure id="figure-3">
+<img src="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/train.jpg" width="1924" height="1487" loading="lazy" decoding="async" alt="Reexpress two Train tab showing the imported Python training run, selected iteration and epoch, loss curves, and training metrics.">
+<figcaption><span><span class="figure-number">Figure 3</span> Inspect the training history</span><span class="figure-actions"><button type="button" class="enhanced image-open" data-figure="figure-3" aria-label="Enlarge screenshot: Inspect the training history">Enlarge image</button><a href="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/train.jpg">Original JPG</a></span></figcaption>
+</figure>
+<p>Next, go to the Analysis tab and select the eval.gemma_4_31b_it_4bit.per_document_scores.jsonl split.</p><p>(Note that your output may differ from ours, especially if you chose different training parameters.)</p><p>We can narrow to that subset by clicking &quot;Select documents&quot; in the upper left and choosing &quot;HR subset: Minimum accepted alpha&quot; and then choosing alpha&gt;=0.99. (With SDM estimators, the High-Reliability (HR) region refers to the set of points for which the class- and prediction-conditional accuracy is estimated to be at least the given alpha value, which in this case is 0.99. Since alpha=0.99 is the most conservative region here, we could equivalently have selected &quot;HR subset: Exactly one region&quot; and then chosen alpha=0.99.)</p><figure id="figure-4">
+<img src="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/eval_alpha99_region.jpg" width="1924" height="1487" loading="lazy" decoding="async" alt="Analysis comparing best iteration calibration with the evaluation set, filtered to the centroid HR region at alpha 0.99. All 81 selected evaluation documents are correctly classified.">
+<figcaption><span><span class="figure-number">Figure 4</span> Examine the high-reliability region</span><span class="figure-actions"><button type="button" class="enhanced image-open" data-figure="figure-4" aria-label="Enlarge screenshot: Examine the high-reliability region">Enlarge image</button><a href="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/eval_alpha99_region.jpg">Original JPG</a></span></figcaption>
+</figure>
+<p>As one final thing to look at as an intro to the utility of Reexpress two (and SDM estimators, more generally), go back to Charts and examine the distribution of the out-of-distribution dataset eval_ood.gemma_4_31b_it_4bit with that of the calibration data. In addition to the HR regions, compare the distributions across the metric-learning signals of Similarity and Distance. The differences in the distributions are stark when controlling for these signals, but typical calibration methods marginalize over such information, which can silently result in over-confident predictions entering the decision-making pipeline. For this reason, when using neural networks, geometry-aware calibration methods like SDM estimators are critical.</p><figure id="figure-5">
+<img src="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/calibration_vs_far_ood.jpg" width="1924" height="1487" loading="lazy" decoding="async" alt="Analysis comparing calibration and far-out-of-domain data using scatterplots and centroid HR alpha distributions.">
+<figcaption><span><span class="figure-number">Figure 5</span> Compare calibration and far out-of-distribution data</span><span class="figure-actions"><button type="button" class="enhanced image-open" data-figure="figure-5" aria-label="Enlarge screenshot: Compare calibration and far out-of-distribution data">Enlarge image</button><a href="https://raw.githubusercontent.com/ReexpressAI/Reexpress_two/main/documentation/tutorials/python_cli_to_app_tutorial/calibration_vs_far_ood.jpg">Original JPG</a></span></figcaption>
+</figure>
+</section>
+<section id="conclusion" class="section" aria-labelledby="conclusion-title"><header class="section-header"><div class="eyebrow">Conclusion</div><h2 id="conclusion-title">Where to go next</h2></header>
+<p>In this tutorial, we have demonstrated the behavior of the reexpress_sdm package with a straightforward classification task, but more generally, you can use the reexpress_sdm package to guide and control complex, continual-learning multi-LM agent pipelines. And Reexpress two can be used to analyze and interpret those conditional-branching decisions, keeping you, the human user, meaningfully &quot;in the loop&quot;.</p>
+</section>
+<footer class="footer"><span>Reexpress AI, Inc. · Similarity · Distance · Magnitude</span><a href="#top">Back to top ↑</a></footer>
+</main>
+</div>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+<dialog id="image-viewer" aria-labelledby="image-title"><div class="dialog-toolbar"><div><strong id="image-title">Tutorial screenshot</strong><span class="dialog-hint">Full resolution · scroll to inspect</span></div><button type="button" class="close-dialog" autofocus>Close</button></div><div class="dialog-image"><img alt=""></div></dialog>
+<script>
+document.documentElement.classList.add('js-ready');
+const status = document.getElementById('copy-status');
+document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+  const code = document.getElementById(button.dataset.copy);
+  let copied = false;
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(code.textContent); copied = true; } } catch (_) {}
+  if (!copied) {
+    const field = document.createElement('textarea'); field.value = code.textContent;
+    field.style.position = 'fixed'; field.style.left = '-9999px'; document.body.append(field); field.select();
+    try { copied = document.execCommand('copy'); } catch (_) {} field.remove(); button.focus({preventScroll:true});
+  }
+  if (copied) { button.textContent = 'Copied'; status.textContent = 'Code copied to clipboard.'; }
+  else { const range = document.createRange(); range.selectNodeContents(code); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); status.textContent = 'Code selected. Press Command-C on Mac or Control-C to copy.'; button.textContent = 'Selected'; }
+  setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+}));
+const modal = document.getElementById('image-viewer');
+document.querySelectorAll('[data-figure]').forEach(button => button.addEventListener('click', () => {
+  const figure = document.getElementById(button.dataset.figure), source = figure.querySelector('img');
+  const target = modal.querySelector('img'); target.src = source.src; target.alt = source.alt;
+  document.getElementById('image-title').textContent = figure.querySelector('figcaption > span').textContent;
+  modal.showModal(); modal.querySelector('.dialog-image').scrollTo(0,0);
+}));
+modal.querySelector('button').addEventListener('click', () => modal.close());
+modal.addEventListener('click', event => { if(event.target === modal){ const r=modal.getBoundingClientRect(); if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom) modal.close(); }});
+const links = Array.from(document.querySelectorAll('.toc a'));
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.isIntersecting) links.forEach(link => { if(link.hash === '#'+entry.target.id) link.setAttribute('aria-current','true'); else link.removeAttribute('aria-current'); });
+  }, {rootMargin:'-5% 0px -75% 0px'});
+  document.querySelectorAll('main > section').forEach(section => observer.observe(section));
+}
+document.querySelectorAll('.mobile-nav a').forEach(link => link.addEventListener('click', () => { document.querySelector('.mobile-nav').open=false; }));
+</script>
+</body>
+</html>

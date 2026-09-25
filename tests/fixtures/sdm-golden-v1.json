@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "sdm-golden-v1",
+  "reference": "code/reexpress/sdm_model.py",
+  "floatType": "float32",
+  "tolerances": {"absolute": 0.000001, "relative": 0.00001},
+  "constants": {"qOffset": 2.0, "oodLimit": 0},
+  "activationCases": [
+    {
+      "name": "q-zero-retains-raw-logit-prediction",
+      "logits": [2.0, -1.0],
+      "q": 0,
+      "d": 0.75,
+      "expectedPrediction": 0,
+      "expectedProbabilities": [0.8262932300567627, 0.1737067550420761],
+      "expectedQPrime": 0.0
+    },
+    {
+      "name": "d-zero-produces-parity",
+      "logits": [0.5, 0.5],
+      "q": 1,
+      "d": 0.0,
+      "expectedPrediction": 0,
+      "expectedProbabilities": [0.5, 0.5],
+      "expectedQPrime": 1.0
+    },
+    {
+      "name": "raw-prediction-nonzero",
+      "logits": [-2.0, 3.0],
+      "q": 3,
+      "d": 1.0,
+      "expectedPrediction": 1,
+      "expectedProbabilities": [0.0003198975755367428, 0.9996801614761353],
+      "expectedQPrime": 3.0
+    },
+    {
+      "name": "d-zero-does-not-redefine-prediction",
+      "logits": [-4.0, 6.0],
+      "q": 5,
+      "d": 0.0,
+      "expectedPrediction": 1,
+      "expectedProbabilities": [0.5, 0.5],
+      "expectedQPrime": 2.6457512378692627
+    }
+  ],
+  "distanceCDFCases": [
+    {
+      "name": "left-insertion-boundaries-and-ties",
+      "classCDFs": [[1.0, 2.0, 2.0, 4.0], [0.5, 3.0]],
+      "queries": [0.0, 0.5, 2.0, 2.1, 4.0, 5.0],
+      "expectedDistanceQuantiles": [1.0, 1.0, 0.5, 0.25, 0.0, 0.0]
+    },
+    {
+      "name": "empty-class-cdf-forces-zero",
+      "classCDFs": [[1.0, 2.0], []],
+      "queries": [0.0, 1.0, 3.0],
+      "expectedDistanceQuantiles": [0.0, 0.0, 0.0]
+    }
+  ],
+  "effectiveSampleCases": [
+    {
+      "name": "right-insertion-includes-ties",
+      "classQPrimeCDFs": [[0.0, 1.0, 1.0, 2.5], [0.0, 0.0, 3.0]],
+      "queries": [0.0, 1.0, 2.0, 3.0],
+      "expectedSampleSizes": [[1, 2], [3, 2], [3, 2], [4, 3]]
+    }
+  ],
+  "neighborCases": [
+    {
+      "name": "stable-distance-ties-and-consecutive-prefix",
+      "supportVectors": [[0.0, 0.0], [0.0, 2.0], [2.0, 0.0], [2.0, 2.0]],
+      "supportLabels": [0, 0, 1, 1],
+      "supportPredictions": [0, 0, 1, 0],
+      "queries": [
+        {"vector": [0.0, 1.0], "prediction": 0, "expectedOrder": [0, 1, 2, 3], "expectedQ": 2, "expectedD0": 1.0},
+        {"vector": [2.0, 1.0], "prediction": 1, "expectedOrder": [2, 3, 0, 1], "expectedQ": 1, "expectedD0": 1.0},
+        {"vector": [1.0, 1.0], "prediction": 0, "expectedOrder": [0, 1, 2, 3], "expectedQ": 2, "expectedD0": 2.0}
+      ],
+      "trainingQuery": {
+        "supportIndex": 1,
+        "vector": [0.0, 2.0],
+        "prediction": 0,
+        "expectedOrderAfterIdentityExclusion": [0, 3, 2],
+        "expectedQ": 1,
+        "expectedD0": 4.0
+      }
+    }
+  ],
+  "adaptorCases": [
+    {
+      "name": "two-affine-layers-no-nonlinearity",
+      "normalization": {"mean": 2.0, "standardDeviation": 1.0},
+      "projectionWeight": [[1.0, 0.0, -1.0], [0.5, 0.5, 0.5]],
+      "projectionBias": [0.25, -0.5],
+      "classifierWeight": [[1.0, 2.0], [-1.0, 1.0]],
+      "classifierBias": [0.1, -0.2],
+      "input": [2.0, 3.0, 1.0],
+      "expectedExemplar": [1.25, -0.5],
+      "expectedLogits": [0.35, -1.95],
+      "expectedPrediction": 0
+    }
+  ],
+  "nestedCalibrationCases": [
+    {
+      "name": "descending-residual-ladder",
+      "numberOfClasses": 2,
+      "alphaResolution": 0.1,
+      "labels": [0, 0, 0, 1, 1, 1],
+      "probabilities": [[0.95, 0.05], [0.85, 0.15], [0.7, 0.3], [0.04, 0.96], [0.14, 0.86], [0.29, 0.71]],
+      "qPrime": [3.0, 2.0, 1.0, 3.0, 2.0, 1.0],
+      "expectedRegions": [
+        {"alpha": 0.9, "minimumRescaledSimilarity": 3.0, "outputThresholds": [0.95, 0.96]},
+        {"alpha": 0.8, "minimumRescaledSimilarity": 2.0, "outputThresholds": [0.85, 0.86]},
+        {"alpha": 0.7, "minimumRescaledSimilarity": 1.0, "outputThresholds": [0.7, 0.71]}
+      ],
+      "inference": [
+        {"probabilities": [0.95, 0.05], "qPrime": 3.0, "prediction": 0, "expectedAlpha": 0.9},
+        {"probabilities": [0.94, 0.06], "qPrime": 3.0, "prediction": 0, "expectedAlpha": 0.8},
+        {"probabilities": [0.1, 0.9], "qPrime": 2.0, "prediction": 1, "expectedAlpha": 0.8},
+        {"probabilities": [0.25, 0.75], "qPrime": 1.0, "prediction": 1, "expectedAlpha": 0.7},
+        {"probabilities": [0.6, 0.4], "qPrime": 3.0, "prediction": 0, "expectedAlpha": 0.0},
+        {"probabilities": [0.99, 0.01], "qPrime": 0.0, "prediction": 0, "expectedAlpha": 0.0}
+      ]
+    },
+    {
+      "name": "skipped-rung-does-not-remove-residual",
+      "numberOfClasses": 2,
+      "alphaResolution": 0.1,
+      "labels": [0, 0, 1, 1],
+      "probabilities": [[0.85, 0.15], [0.86, 0.14], [0.16, 0.84], [0.13, 0.87]],
+      "qPrime": [1.0, 1.0, 1.0, 1.0],
+      "expectedRegions": [
+        {"alpha": 0.8, "minimumRescaledSimilarity": 1.0, "outputThresholds": [0.85, 0.84]}
+      ]
+    },
+    {
+      "name": "empty-true-class-never-forms-region",
+      "numberOfClasses": 2,
+      "alphaResolution": 0.1,
+      "labels": [0, 0],
+      "probabilities": [[0.99, 0.01], [0.98, 0.02]],
+      "qPrime": [2.0, 1.0],
+      "expectedRegions": []
+    }
+  ],
+  "regionMembershipCases": [
+    {
+      "name": "singleton-predicted-class-required",
+      "region": {"alpha": 0.8, "minimumRescaledSimilarity": 1.0, "outputThresholds": [0.8, 0.8]},
+      "rows": [
+        {"probabilities": [0.8, 0.2], "qPrime": 1.0, "prediction": 0, "expected": true},
+        {"probabilities": [0.75, 0.25], "qPrime": 2.0, "prediction": 0, "expected": false},
+        {"probabilities": [0.85, 0.15], "qPrime": 0.0, "prediction": 0, "expected": false},
+        {"probabilities": [0.2, 0.8], "qPrime": 1.0, "prediction": 0, "expected": false}
+      ]
+    },
+    {
+      "name": "threshold-boundary-is-inclusive",
+      "region": {"alpha": 0.6, "minimumRescaledSimilarity": 1.0, "outputThresholds": [0.6, 0.6]},
+      "rows": [
+        {"probabilities": [0.6, 0.4], "qPrime": 2.0, "prediction": 0, "expected": true},
+        {"probabilities": [0.599, 0.401], "qPrime": 2.0, "prediction": 0, "expected": false}
+      ]
+    }
+  ],
+  "dkwCases": [
+    {
+      "name": "rung-pinned-two-class-band",
+      "alpha": 0.9,
+      "sampleSizes": [3, 2],
+      "distanceQuantile": 0.9,
+      "expectedErrors": [0.7066036462783813, 0.8654091954231262],
+      "expectedMaximumError": 0.8654091954231262,
+      "expectedLowerDistance": 0.0345908045768738,
+      "expectedUpperDistance": 1.0
+    },
+    {
+      "name": "zero-sample-is-maximal-uncertainty",
+      "alpha": 0.95,
+      "sampleSizes": [0, 50],
+      "distanceQuantile": 0.75,
+      "expectedMaximumError": 1.0,
+      "expectedLowerDistance": 0.0,
+      "expectedUpperDistance": 1.0
+    }
+  ]
+}

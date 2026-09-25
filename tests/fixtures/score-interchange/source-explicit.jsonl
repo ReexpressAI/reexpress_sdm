@@ -1,0 +1,2 @@
+{"id": "explicit-s0", "label": 0, "document": "An explicitly identified training example", "embedding": [1], "attributes": [0], "support_index": 0}
+{"id": "explicit-s3", "label": 1, "embedding": [0], "attributes": [2], "support_index": 3}

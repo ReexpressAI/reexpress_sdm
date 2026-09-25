@@ -1,0 +1,427 @@
+{
+  "representationFingerprint": "python-torch-lifecycle:v1",
+  "classNames": [
+    "Negative",
+    "Positive"
+  ],
+  "training": [
+    {
+      "id": "source-train-0",
+      "label": 0,
+      "document": "source-train example 0",
+      "embedding": [
+        -2.0,
+        -0.8,
+        0.1
+      ]
+    },
+    {
+      "id": "source-train-1",
+      "label": 0,
+      "document": "source-train example 1",
+      "embedding": [
+        -1.7,
+        -0.5,
+        0.2
+      ]
+    },
+    {
+      "id": "source-train-2",
+      "label": 0,
+      "document": "source-train example 2",
+      "embedding": [
+        -1.3,
+        -0.9,
+        0.4
+      ]
+    },
+    {
+      "id": "source-train-3",
+      "label": 0,
+      "document": "source-train example 3",
+      "embedding": [
+        -0.8,
+        -0.3,
+        -0.2
+      ]
+    },
+    {
+      "id": "source-train-4",
+      "label": 0,
+      "document": "source-train example 4",
+      "embedding": [
+        -0.4,
+        -0.6,
+        0.3
+      ]
+    },
+    {
+      "id": "source-train-5",
+      "label": 0,
+      "document": "source-train example 5",
+      "embedding": [
+        1.7,
+        0.9,
+        -0.1
+      ]
+    },
+    {
+      "id": "source-train-6",
+      "label": 1,
+      "document": "source-train example 6",
+      "embedding": [
+        1.0,
+        0.5,
+        0.2
+      ]
+    },
+    {
+      "id": "source-train-7",
+      "label": 1,
+      "document": "source-train example 7",
+      "embedding": [
+        2.2,
+        1.1,
+        0.4
+      ]
+    },
+    {
+      "id": "added-train-0",
+      "label": 0,
+      "document": "added-train example 0",
+      "embedding": [
+        -1.5,
+        -0.2,
+        0.6
+      ]
+    },
+    {
+      "id": "added-train-1",
+      "label": 1,
+      "document": "added-train example 1",
+      "embedding": [
+        2.5,
+        1.3,
+        0.7
+      ]
+    }
+  ],
+  "calibration": [
+    {
+      "id": "source-cal-0",
+      "label": 0,
+      "document": "source-cal example 0",
+      "embedding": [
+        -1.9,
+        -0.7,
+        0.2
+      ]
+    },
+    {
+      "id": "source-cal-1",
+      "label": 0,
+      "document": "source-cal example 1",
+      "embedding": [
+        -1.1,
+        -0.4,
+        0.5
+      ]
+    },
+    {
+      "id": "source-cal-2",
+      "label": 0,
+      "document": "source-cal example 2",
+      "embedding": [
+        -0.6,
+        -0.8,
+        -0.1
+      ]
+    },
+    {
+      "id": "source-cal-3",
+      "label": 0,
+      "document": "source-cal example 3",
+      "embedding": [
+        1.6,
+        0.8,
+        0.1
+      ]
+    },
+    {
+      "id": "source-cal-4",
+      "label": 1,
+      "document": "source-cal example 4",
+      "embedding": [
+        1.3,
+        0.6,
+        0.3
+      ]
+    },
+    {
+      "id": "added-cal-0",
+      "label": 0,
+      "document": "added-cal example 0",
+      "embedding": [
+        -0.9,
+        -0.1,
+        0.8
+      ]
+    },
+    {
+      "id": "added-cal-1",
+      "label": 1,
+      "document": "added-cal example 1",
+      "embedding": [
+        1.9,
+        1.4,
+        0.6
+      ]
+    }
+  ],
+  "evaluation": [
+    {
+      "id": "evaluation-0",
+      "label": 0,
+      "document": "evaluation example 0",
+      "embedding": [
+        -1.85,
+        -0.62,
+        0.27
+      ]
+    },
+    {
+      "id": "evaluation-1",
+      "label": 1,
+      "document": "evaluation example 1",
+      "embedding": [
+        1.45,
+        0.76,
+        0.39
+      ]
+    },
+    {
+      "id": "evaluation-2",
+      "label": 0,
+      "document": "evaluation example 2",
+      "embedding": [
+        3.6,
+        -1.2,
+        1.4
+      ]
+    }
+  ],
+  "swiftContinuationTraining": [
+    {
+      "id": "source-train-0",
+      "label": 0,
+      "document": "source-train example 0",
+      "embedding": [
+        -2.0,
+        -0.8,
+        0.1
+      ]
+    },
+    {
+      "id": "source-train-1",
+      "label": 0,
+      "document": "source-train example 1",
+      "embedding": [
+        -1.7,
+        -0.5,
+        0.2
+      ]
+    },
+    {
+      "id": "source-train-2",
+      "label": 0,
+      "document": "source-train example 2",
+      "embedding": [
+        -1.3,
+        -0.9,
+        0.4
+      ]
+    },
+    {
+      "id": "source-train-3",
+      "label": 0,
+      "document": "source-train example 3",
+      "embedding": [
+        -0.8,
+        -0.3,
+        -0.2
+      ]
+    },
+    {
+      "id": "source-train-4",
+      "label": 0,
+      "document": "source-train example 4",
+      "embedding": [
+        -0.4,
+        -0.6,
+        0.3
+      ]
+    },
+    {
+      "id": "source-train-5",
+      "label": 0,
+      "document": "source-train example 5",
+      "embedding": [
+        1.7,
+        0.9,
+        -0.1
+      ]
+    },
+    {
+      "id": "source-train-6",
+      "label": 1,
+      "document": "source-train example 6",
+      "embedding": [
+        1.0,
+        0.5,
+        0.2
+      ]
+    },
+    {
+      "id": "source-train-7",
+      "label": 1,
+      "document": "source-train example 7",
+      "embedding": [
+        2.2,
+        1.1,
+        0.4
+      ]
+    },
+    {
+      "id": "added-train-0",
+      "label": 0,
+      "document": "added-train example 0",
+      "embedding": [
+        -1.5,
+        -0.2,
+        0.6
+      ]
+    },
+    {
+      "id": "added-train-1",
+      "label": 1,
+      "document": "added-train example 1",
+      "embedding": [
+        2.5,
+        1.3,
+        0.7
+      ]
+    },
+    {
+      "id": "swift-added-train-0",
+      "label": 0,
+      "document": "swift-added-train example 0",
+      "embedding": [
+        5.2,
+        -0.5,
+        0.9
+      ]
+    },
+    {
+      "id": "swift-added-train-1",
+      "label": 1,
+      "document": "swift-added-train example 1",
+      "embedding": [
+        6.4,
+        0.8,
+        1.2
+      ]
+    }
+  ],
+  "swiftContinuationCalibration": [
+    {
+      "id": "source-cal-0",
+      "label": 0,
+      "document": "source-cal example 0",
+      "embedding": [
+        -1.9,
+        -0.7,
+        0.2
+      ]
+    },
+    {
+      "id": "source-cal-1",
+      "label": 0,
+      "document": "source-cal example 1",
+      "embedding": [
+        -1.1,
+        -0.4,
+        0.5
+      ]
+    },
+    {
+      "id": "source-cal-2",
+      "label": 0,
+      "document": "source-cal example 2",
+      "embedding": [
+        -0.6,
+        -0.8,
+        -0.1
+      ]
+    },
+    {
+      "id": "source-cal-3",
+      "label": 0,
+      "document": "source-cal example 3",
+      "embedding": [
+        1.6,
+        0.8,
+        0.1
+      ]
+    },
+    {
+      "id": "source-cal-4",
+      "label": 1,
+      "document": "source-cal example 4",
+      "embedding": [
+        1.3,
+        0.6,
+        0.3
+      ]
+    },
+    {
+      "id": "added-cal-0",
+      "label": 0,
+      "document": "added-cal example 0",
+      "embedding": [
+        -0.9,
+        -0.1,
+        0.8
+      ]
+    },
+    {
+      "id": "added-cal-1",
+      "label": 1,
+      "document": "added-cal example 1",
+      "embedding": [
+        1.9,
+        1.4,
+        0.6
+      ]
+    },
+    {
+      "id": "swift-added-cal-0",
+      "label": 0,
+      "document": "swift-added-cal example 0",
+      "embedding": [
+        5.5,
+        -0.3,
+        1.1
+      ]
+    },
+    {
+      "id": "swift-added-cal-1",
+      "label": 1,
+      "document": "swift-added-cal example 1",
+      "embedding": [
+        6.1,
+        0.7,
+        1.4
+      ]
+    }
+  ]
+}
