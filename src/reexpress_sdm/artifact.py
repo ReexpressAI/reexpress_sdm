@@ -29,7 +29,9 @@ WEIGHTS_FILE = "weights.f32"
 SUPPORT_VECTORS_FILE = "support.f32"
 SUPPORT_RECORDS_FILE = "support.jsonl"
 CALIBRATION_FILE = "calibration.jsonl"
-MAX_MANIFEST_BYTES = 64 * 1024 * 1024
+# Shared by loading, export and training pre-flight. This is a metadata byte
+# budget, not a row-count or embedding-dimension limit.
+MAX_MANIFEST_BYTES = 4 * 1024**3
 MAX_TENSOR_ELEMENTS = 2_000_000_000
 MIN_JSON_INTEGER = -(1 << 63)
 MAX_JSON_INTEGER = (1 << 64) - 1
@@ -892,6 +894,16 @@ def _validate_overwrite_package(path: Path) -> None:
         ) from error
 
 
+def _check_encoded_manifest_size(manifest: Mapping[str, Any]) -> int:
+    """Count the exact writer encoding without allocating a full JSON string."""
+    size = 1  # Trailing newline.
+    for chunk in json.JSONEncoder(ensure_ascii=True, indent=2, allow_nan=False).iterencode(manifest):
+        size += len(chunk)  # ensure_ascii means each character is one UTF-8 byte.
+        if size > MAX_MANIFEST_BYTES:
+            _fail(f"manifest exceeds the {MAX_MANIFEST_BYTES / 1024**2:g} MiB model safety limit")
+    return size
+
+
 def write_artifact(
     path: str | os.PathLike[str],
     artifact: SDMArtifact,
@@ -952,6 +964,17 @@ def write_artifact(
     }
     manifest = validate_manifest(manifest)
 
+    files = [WEIGHTS_FILE, SUPPORT_VECTORS_FILE, SUPPORT_RECORDS_FILE]
+    if artifact.calibration_rows is not None:
+        files.append(CALIBRATION_FILE)
+    if include_checksums:
+        # Actual SHA-256 values have exactly the same encoded length. Check
+        # before staging/writing large payloads or replacing an existing model.
+        manifest["checksums"] = {filename: "0" * 64 for filename in files}
+    else:
+        manifest.pop("checksums", None)
+    _check_encoded_manifest_size(manifest)
+
     temporary = Path(
         tempfile.mkdtemp(prefix=f".{target.name}.tmp-", dir=str(target.parent))
     )
@@ -989,16 +1012,10 @@ def write_artifact(
                     stream.write("\n")
 
         if include_checksums:
-            files = [WEIGHTS_FILE, SUPPORT_VECTORS_FILE, SUPPORT_RECORDS_FILE]
-            if artifact.calibration_rows is not None:
-                files.append(CALIBRATION_FILE)
             manifest["checksums"] = {filename: _sha256(temporary / filename) for filename in files}
-        else:
-            manifest.pop("checksums", None)
-        (temporary / MANIFEST_FILE).write_text(
-            json.dumps(manifest, ensure_ascii=True, indent=2, allow_nan=False) + "\n",
-            encoding="utf-8",
-        )
+        with (temporary / MANIFEST_FILE).open("w", encoding="utf-8", newline="\n") as stream:
+            json.dump(manifest, stream, ensure_ascii=True, indent=2, allow_nan=False)
+            stream.write("\n")
         load_artifact(temporary, verify_checksums=True)
 
         if _path_identity(target) != original_identity:

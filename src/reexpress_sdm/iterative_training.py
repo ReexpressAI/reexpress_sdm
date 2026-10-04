@@ -17,6 +17,7 @@ from typing import Any, Callable, Mapping, Sequence
 import numpy as np
 
 from .backends import create_training_backend
+from .capacity import check_training_capacity
 from .errors import DimensionMismatchError
 from .training import TrainingConfig, TrainingResult, TrainingControl, _check_control, _representation_defaults, _starting_model, _validate_training_arrays
 from .types import SDMArtifact
@@ -106,6 +107,22 @@ def train_iterations(
     if len(set(ids)) != len(ids):
         raise ValueError("training and calibration ids must be unique and must not overlap")
 
+    capacity_metadata = {
+        "classNames": class_names,
+        "representation": initial_artifact.manifest["representation"] if initial_artifact is not None else {
+            "fingerprint": representation_fingerprint, "provider": representation_provider,
+            "model": representation_model,
+        },
+        "sourceModelID": initial_artifact.model_id if initial_artifact is not None else None,
+        "continuedFromModelID": initial_artifact.model_id if initial_artifact is not None else None,
+    }
+    check_training_capacity(
+        configuration, training_count=len(train_ids), calibration_count=len(calibration_ids),
+        input_dimension=train_vectors.shape[1], ids=ids,
+        iterations=int(number_of_random_shuffles), shuffle=shuffle_training_and_calibration,
+        metadata=capacity_metadata, check_cancelled=lambda: _check_control(control),
+    )
+
     # Do not allocate a second complete feature matrix for the ordinary
     # unshuffled path. For J shuffles the one pooled matrix is reused.
     pooled_vectors = np.concatenate((train_vectors, calibration_vectors)) if shuffle_training_and_calibration else None
@@ -166,6 +183,7 @@ def train_iterations(
             progress=report,
             initial_artifact=initial_artifact,
             control=control,
+            _capacity_checked=True,
         )
         history.extend({**row, "iteration": iteration, "iterations": int(number_of_random_shuffles)} for row in result.history)
         iteration_summaries.append({

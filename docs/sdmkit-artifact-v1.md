@@ -26,6 +26,16 @@ Writers stage the package on the destination volume and publish it only after
 every file and checksum has been written. Sandboxed applications use Foundation's
 item-replacement directory for a user-selected destination.
 
+Current readers and writers limit `manifest.json` to **4 GiB** (4,294,967,296
+encoded bytes), independently of tensor payloads. This is a loader resource
+budget, not a document-count limit or a change to schema version 1. Earlier
+readers limited manifests to 64 MiB and cannot open larger manifests. Writers
+check the exact encoded size before writing large payload files. Training also
+checks a conservative budget based on source IDs, provenance, calibration CDFs,
+candidate regions, and requested history; arbitrary metadata added later is
+covered by the exact export check. Support and adaptor weights each retain the
+separate maximum of 2,000,000,000 Float32 elements.
+
 All model JSON files reject duplicate object keys before decoding, including
 distinct Unicode spellings that are canonically equivalent in Swift. Integer
 tokens (including metadata) must lie in the shared range `[-2^63, 2^64-1]`;

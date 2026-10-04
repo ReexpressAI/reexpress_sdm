@@ -493,6 +493,7 @@ class TorchTrainer:
         initial_artifact: SDMArtifact | None = None,
         control: TrainingControl | None = None,
         progress: Callable[[Mapping[str, float | int | bool | None]], None] | None = None,
+        _capacity_checked: bool = False,
     ) -> TrainingResult:
         """Fit a model, recording wall time through final calibration, excluding export.
 
@@ -544,6 +545,24 @@ class TorchTrainer:
         _check_control(control)
         config, class_names, saved_normalization = _starting_model(
             config, initial_artifact, train_vectors.shape[1], class_names, representation_fingerprint)
+        if not _capacity_checked:
+            # The iterative orchestrator already checks the complete run before
+            # pooling. Direct fit callers receive the same check before normalization.
+            from .capacity import check_training_capacity
+            check_training_capacity(
+                config, training_count=len(train_ids), calibration_count=len(calibration_ids),
+                input_dimension=train_vectors.shape[1], ids=iter(train_ids + calibration_ids),
+                metadata={
+                    "classNames": class_names,
+                    "representation": initial_artifact.manifest["representation"] if initial_artifact is not None else {
+                        "fingerprint": representation_fingerprint, "provider": representation_provider,
+                        "model": representation_model,
+                    },
+                    "sourceModelID": initial_artifact.model_id if initial_artifact is not None else None,
+                    "continuedFromModelID": initial_artifact.model_id if initial_artifact is not None else None,
+                },
+                check_cancelled=lambda: _check_control(control),
+            )
         mean = float(saved_normalization["mean"]) if saved_normalization else float(np.mean(train_vectors, dtype=np.float32))
         standard_deviation = float(saved_normalization["standardDeviation"]) if saved_normalization else float(np.std(train_vectors, ddof=1, dtype=np.float32))
         if not math.isfinite(standard_deviation) or standard_deviation <= 0.0:

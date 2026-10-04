@@ -207,6 +207,49 @@ sdm train --device cpu \
 
 Use `--device mps` on Apple silicon or `--device cuda` on a CUDA machine. `TorchTrainer` is also available directly from `reexpress_sdm`. PyTorch performs optimization, adaptor forwards, and exact support matching, including selected-checkpoint finalization. Saved weights and projected support are contiguous Float32 arrays in the portable artifact. Empirical CDFs, nested region fitting, and score diagnostics use shared host math. Training trajectories and values near numerical boundaries can vary slightly across devices.
 
+Training checks model capacity before allocating pooled/shuffled or normalized
+feature copies. The check uses the actual split policy and exemplar dimension
+(including the saved dimension for continued training), document ID lengths,
+calibration ladder, and requested training history. It reserves a conservative
+budget for generated metadata; it does not read or hash feature vectors again.
+The CLI performs this check **after loading the input datasets**, so it cannot
+prevent memory exhaustion during loading. Direct `TorchTrainer.fit()` calls
+also check capacity before normalization.
+
+Model manifests have a **4 GiB** encoded JSON budget, shared with Reexpress two.
+This is not a limit on the full model/project or a blanket document-count limit.
+Projected support and adaptor weights each retain their existing limit of two
+billion Float32 elements. The manifest check can reject a requested run whose
+conservative budget exceeds the limit even if a particular resulting model would
+be smaller. Export separately checks the exact encoded size, including any
+caller-added metadata, before writing large payloads or replacing a destination.
+Models with manifests above 64 MiB require an updated Python package/Reexpress two
+reader. Python keeps the policy in `artifact.MAX_MANIFEST_BYTES`; changing it
+locally does not change the app's limit or available memory.
+
+When opening a model with a manifest larger than 512 MiB, the CLI prints a
+non-blocking JSON `modelMemoryAdvisory` record to stderr before decoding it.
+This checks file size only; decoded metadata and temporary copies can require
+substantially more RAM. Ordinary models remain quiet, the JSON report on stdout
+is unchanged, and direct Python API loads do not emit this CLI advisory.
+
+`sdm train` also prints a separate JSON `trainingMemoryAdvisory` record to stderr,
+alongside progress records. It reports Float32 input-vector bytes and, when the
+platform provides it, installed RAM. This is a lower bound, **not peak memory or
+a guarantee that training fits**: Python retains additional pooled/shuffled and
+normalized matrices, projected vectors, matching workspaces, and metadata.
+JSONL also retains decoded feature lists; `.sdmdataset` avoids that particular
+overhead. On CUDA, system RAM and GPU memory are separate, and the whole projected
+support index resides on the selected GPU. The advisory never blocks training
+and does not alter the JSON report on stdout.
+
+For planning before loading data, the standalone
+[training capacity calculator](https://github.com/ReexpressAI/reexpress_sdm/blob/main/docs/tools/README.md)
+estimates memory ranges or approximate row counts for Reexpress two and Python.
+It uses only Python's standard library, separates CUDA system/GPU memory, and
+reports its assumptions. These are planning estimates, not guarantees of fit
+or training-time predictions.
+
 Inference also defaults to PyTorch. Model weights and support are retained on the chosen device, and both adaptor projection and matching use that runtime:
 
 ```python

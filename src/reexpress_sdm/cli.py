@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 from typing import Any, Iterable, Mapping, Sequence, TextIO
 
+from . import artifact as artifact_io
 from .artifact import load_artifact, write_artifact
 from .bundle import DatasetBundle, iter_dataset_rows, validate_dataset_rows, write_dataset_bundle, write_dataset_jsonl
 from .controller import SDMController, _artifact_information
@@ -22,6 +23,35 @@ from .score_io import score_dataset_rows, write_scored_jsonl
 from .source_io import export_source_dataset, SOURCE_ROLES
 from .training import TrainingConfig
 from .types import EstimatorKind
+
+
+# An advisory threshold, separate from the shared hard loader/export budget.
+_LARGE_MODEL_ADVISORY_BYTES = 512 * 1024**2
+
+
+def _advise_large_model(path: str | None) -> None:
+    """Report metadata size once at the CLI boundary, without reading its contents."""
+    if path is None:
+        return
+    root = Path(path)
+    manifest = root / artifact_io.MANIFEST_FILE
+    try:
+        if root.is_symlink() or not root.is_dir() or manifest.is_symlink() or not manifest.is_file():
+            return
+        size = manifest.stat().st_size
+    except OSError:
+        # The ordinary loader owns validation and its existing error messages.
+        return
+    if _LARGE_MODEL_ADVISORY_BYTES < size <= artifact_io.MAX_MANIFEST_BYTES:
+        print(json.dumps({
+            "type": "modelMemoryAdvisory",
+            "manifestBytes": size,
+            "message": (
+                "This model contains a large amount of metadata. Opening it may require "
+                "substantially more memory than its file size. This is not a peak-memory "
+                "estimate or a guarantee of fit."
+            ),
+        }, separators=(",", ":")), file=sys.stderr)
 
 
 class _ArgumentParser(argparse.ArgumentParser):
@@ -331,6 +361,12 @@ def _run_train(args: argparse.Namespace) -> int:
     def progress(values):
         print(json.dumps(dict(values), separators=(",", ":")), file=sys.stderr)
 
+    from .capacity import memory_advisory, physical_memory_bytes
+    print(json.dumps(memory_advisory(
+        4 * (len(training.ids) + len(calibration.ids)) * training.vectors.shape[1],
+        physical_memory_bytes(),
+    ), separators=(",", ":")), file=sys.stderr)
+
     result = train_iterations(
         configuration,
         training.vectors,
@@ -479,7 +515,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     train = subparsers.add_parser("train", help="Train a new model or continue training",
         description="Fit the adaptor and calibrated regions from labeled training and calibration data. "
-                    "Use --initial_model to continue training from a saved model.")
+                    "Use --initial_model to continue training from a saved model. "
+                    "Capacity checks run after loading; a non-blocking memory advisory is printed to stderr.")
     train.add_argument("--training", required=True, help='Labeled training JSONL or .sdmdataset')
     train.add_argument("--calibration", required=True, help='Labeled calibration JSONL or .sdmdataset')
     train.add_argument("--output", required=True,
@@ -555,6 +592,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        _advise_large_model(getattr(args, "model", None) or getattr(args, "initial_model", None))
         return int(args.run(args))
     except (SDMError, OSError, ValueError, TypeError, ImportError, json.JSONDecodeError) as error:
         print(f"sdm: {error}", file=sys.stderr)
