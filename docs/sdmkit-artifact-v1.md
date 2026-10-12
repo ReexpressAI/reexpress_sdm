@@ -36,6 +36,10 @@ candidate regions, and requested history; arbitrary metadata added later is
 covered by the exact export check. Support and adaptor weights each retain the
 separate maximum of 2,000,000,000 Float32 elements.
 
+These tensor limits do not impose an element or blanket row-count limit on raw
+input datasets. Capacity validation does not establish that a workload fits
+available RAM or will finish within a particular time.
+
 All model JSON files reject duplicate object keys before decoding, including
 distinct Unicode spellings that are canonically equivalent in Swift. Integer
 tokens (including metadata) must lie in the shared range `[-2^63, 2^64-1]`;
@@ -174,13 +178,13 @@ rejection from every region.
 
 The shared JSON Lines schema covers both raw and precomputed rows. Each row
 requires `id` and `label`; it may contain `document`, `embedding`, `attributes`,
-`logits`, and additional fields. Reexpress two can turn a document-only row
-into a feature-ready row with a configured embedding provider. The
-framework-neutral SDK intentionally has no implicit provider dependency, so
-its numeric train/score/evaluate commands require `embedding`, `attributes`, or
-both. A row used for adaptor training must ultimately have one fixed-length
-feature vector. `label == -1` means unlabeled and `label == -99` is a
-support-only OOD label, matching the Python conventions.
+`logits`, and additional fields. Reexpress two can store document-only rows,
+but training and scoring require precomputed `embedding`, `attributes`, or both;
+the app does not generate embeddings. The framework-neutral SDK likewise has
+no implicit provider dependency and requires these features for its numeric
+train/score/evaluate commands. A row used for adaptor training must ultimately
+have one fixed-length feature vector. `label == -1` means unlabeled and
+`label == -99` is a support-only OOD label, matching the Python conventions.
 
 All splits participating in one trained artifact must have identical
 representation fingerprints and embedding dimensions. Implementations reject,

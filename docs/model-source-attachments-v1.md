@@ -73,7 +73,8 @@ rows are attached.
 
 ## Input feature evidence
 
-New Python training artifacts add `metadata.sourceData`:
+Models newly trained with the Python CLI or Reexpress two include
+`metadata.sourceData`:
 
 ```json
 {
@@ -97,10 +98,10 @@ to have supplied or verified any feature values.
 For interoperability checks, `[1.0, -0.0, -2.5]` and `[1.0, 0.0, -2.5]` both hash
 to `865df0fca3c0d4db824a59a9e3b6b6cd7fd45e9b968dfc71f480574991c95063`.
 
-Models without these digests, including older Python models and current native
-Swift models, remain attachable. With full features, consumers can compare
-projected training vectors to saved support vectors, or calibration logits to
-saved calibration logits, using the existing Float32 tolerance. Such comparisons
+Models without these optional digests remain attachable. With full features,
+consumers can compare projected training vectors to saved support vectors, or
+calibration logits to saved calibration logits, using the existing Float32
+tolerance. Such comparisons
 provide projected numerical compatibility, not proof of identical raw input
 features. Text-only ID/index/label attachments provide display content, never
 numerical identity evidence or a reason to exclude a support row from matching.
@@ -116,8 +117,8 @@ exporter replaces with validated membership.
 
 Python `sdm dataset export-sources` exports one companion atomically. Either
 original input may be supplied independently; selected-role output requires all
-rows of that selected split across the supplied files. `--text-only` omits cached
-features. `--with-scores` computes fresh full portable scores and requires full
+rows of that selected split across the supplied files. `--text_only` omits cached
+features. `--with_scores` computes fresh full portable scores and requires full
 features; these two flags cannot be combined. Training rows exclude their
 explicitly validated support index; calibration rows never receive that
 exclusion. Incoming score fields are discarded unless replaced by this fresh
